@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ML
 {
-    class DataObject
+    class ShallowExperimentScore
     {
-
-        public float[] InputData { get; set; }
-
-        public float OutputData { get; set; }
+        public string Name { get; set; }
+        public double Score { get; set; }
     }
 }

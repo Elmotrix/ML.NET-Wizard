@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,24 +17,29 @@ namespace ML
 {
     public partial class Wizard : Form
     {
-        ExperimentSettings experimentSettings;
-        public MLContext mlContext = new MLContext();
         List<Panel> scenePanels = new List<Panel>();
         int CurrentScene;
-        string[] algorithms;
+        bool disableUpdates;
+        AutoMLHandler mlHolder = new AutoMLHandler();
         public Wizard()
         {
             InitializeComponent();
             scenePanels.Add(pnlSelectData);
+            scenePanels.Add(pnlSelectOutput);
             scenePanels.Add(pnlSelectMLtype);
             scenePanels.Add(pnlConfig);
+            scenePanels.Add(pnlWaiting);
+            scenePanels.Add(pnlResault);
 
             SetScene(0);
+            lbDataKinds.Items.Add("Single");
+            lbDataKinds.Items.Add("String");
+            lbDataKinds.Items.Add("Boolean");
+            mlHolder.TrainingComplete += btnNext_Click;
         }
 
         private void SetScene(int Scene)
         {
-            pnlResault.Visible = false;
             foreach (Panel item in scenePanels)
             {
                 item.Visible = false;
@@ -41,10 +48,37 @@ namespace ML
             scenePanels[Scene].Dock = DockStyle.Fill;
             CurrentScene = Scene;
             btnPrev.Enabled = (Scene != 0);
-            btnNext.Visible = (Scene < scenePanels.Count-1);
-            btnFinish.Visible = !(btnNext.Visible);
+            if (pnlSelectOutput.Visible)
+            {
+                LoadDataPreview();
+            }
+            btnTrainModel.Visible = pnlConfig.Visible;
+            btnFinish.Visible = pnlResault.Visible;
+            btnSaveModel.Visible = pnlResault.Visible;
+            btnPrev.Visible = !pnlResault.Visible;
+            btnNext.Visible = !(pnlResault.Visible || pnlConfig.Visible);
+            pnlNavigation.Visible = !pnlWaiting.Visible;
+            if (pnlResault.Visible)
+            {
+                ShowResults();
+            }
         }
-        private void SetAlgorithms()
+        private void ShowResults()
+        {
+            dgvResultMain.DataSource = mlHolder.ShallowExperimentResults;
+        }
+        private void LoadDataPreview()
+        {
+            dgvDataPreview.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect;
+            dgvDataPreview.DataSource = mlHolder.LoadData(tbxFileName.Text, tbxSeparator.Text[0], cbHasHeader.Checked);
+            foreach (DataGridViewColumn column in dgvDataPreview.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+            dgvDataPreview.SelectionMode = DataGridViewSelectionMode.FullColumnSelect;
+        }
+
+        private void SetAlgorithms(string[] algorithms)
         {
             cblModels.Items.Clear();
             cblModels.Items.AddRange(algorithms);
@@ -56,46 +90,41 @@ namespace ML
 
         private void btnBinClas_Click(object sender, EventArgs e)
         {
-            experimentSettings = new BinaryExperimentSettings();
             SetScene(CurrentScene + 1);
-            algorithms = System.Enum.GetNames(typeof(BinaryClassificationTrainer));
-            SetAlgorithms();
+            SetAlgorithms(mlHolder.SetExperiment<BinaryExperimentSettings>());
         }
 
         private void btnMultiClas_Click(object sender, EventArgs e)
         {
-            experimentSettings = new MulticlassExperimentSettings();
             SetScene(CurrentScene + 1);
-            algorithms = System.Enum.GetNames(typeof(MulticlassClassificationTrainer));
-            SetAlgorithms();
+            SetAlgorithms(mlHolder.SetExperiment<MulticlassExperimentSettings>());
         }
 
         private void btnReg_Click(object sender, EventArgs e)
         {
-            experimentSettings = new RegressionExperimentSettings();
             SetScene(CurrentScene + 1);
-            algorithms = System.Enum.GetNames(typeof(RegressionTrainer));
-            SetAlgorithms();
+            SetAlgorithms(mlHolder.SetExperiment<RegressionExperimentSettings>());
         }
 
         private void btnRecommendation_Click(object sender, EventArgs e)
         {
-            experimentSettings = new RecommendationExperimentSettings();
             SetScene(CurrentScene + 1);
-            algorithms = System.Enum.GetNames(typeof(RecommendationTrainer));
-            SetAlgorithms();
+            SetAlgorithms(mlHolder.SetExperiment<RecommendationExperimentSettings>());
         }
 
         private void btnRanking_Click(object sender, EventArgs e)
         {
-            experimentSettings = new RankingExperimentSettings();
             SetScene(CurrentScene + 1);
-            algorithms = System.Enum.GetNames(typeof(RankingTrainer));
-            SetAlgorithms();
+            SetAlgorithms(mlHolder.SetExperiment<RankingExperimentSettings>());
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action(() => SetScene(CurrentScene + 1)));
+                return;
+            }
             SetScene(CurrentScene + 1);
         }
 
@@ -103,13 +132,6 @@ namespace ML
         {
             SetScene(CurrentScene - 1);
         }
-
-        private void btnAddData_Click(object sender, EventArgs e)
-        {
-            AddData addData = new AddData(this);
-            addData.ShowDialog();
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -126,69 +148,7 @@ namespace ML
 
         private void btnFinish_Click(object sender, EventArgs e)
         {
-            foreach (Panel item in scenePanels)
-            {
-                item.Visible = false;
-            }
-            rtbResault.Text = "";
-            pnlResault.Visible = true;
-            pnlResault.Dock = DockStyle.Fill;
-            Microsoft.ML.Data.TextLoader.Options options = new Microsoft.ML.Data.TextLoader.Options();
-            options.DecimalMarker = tbxDecimalMarker.Text[0];
-            options.HasHeader = cbHasHeader.Checked;
-            options.Separators = new char[] { tbxSeparator.Text[0] };
-            IDataView dataView = mlContext.Data.LoadFromTextFile(tbxFileName.Text,options:options);
-
-            rtbResault.Text += dataView.Schema;
-            rtbResault.Text += "\r\n";
-            rtbResault.Text += dataView.Preview();
-            rtbResault.Text += "\r\n";
-            DataDebuggerPreview debuggerPreview = dataView.Preview();
-            Type trainerType = experimentSettings.GetType();
-            experimentSettings.MaxExperimentTimeInSeconds = (uint)numTimeout.Value;
-            if (lblSelectedFolder.Text != "[no folder selected]")
-            {
-                experimentSettings.CacheDirectoryName = lblSelectedFolder.Text;
-            }
-            if (trainerType == typeof(BinaryExperimentSettings))
-            {
-            }
-            if (trainerType == typeof(MulticlassExperimentSettings))
-            {
-
-            }
-            if (trainerType == typeof(RegressionExperimentSettings))
-            {
-                RegressionExperimentSettings experimentSetting = (RegressionExperimentSettings)experimentSettings;
-                for (int i = 0; i < cblModels.Items.Count; i++)
-                {
-                    if (cblModels.GetItemCheckState(i) == CheckState.Unchecked)
-                    {
-                        experimentSetting.Trainers.Remove((RegressionTrainer)Enum.Parse(typeof(RegressionTrainer), cblModels.GetItemText(cblModels.Items[i])));
-                    }
-                }
-                var labelColumnInfo = new ColumnInformation()
-                {
-                    LabelColumnName = "fare_amount"
-                };
-                RegressionExperiment experiment = mlContext.Auto().CreateRegressionExperiment(experimentSetting);
-                ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(dataView, labelColumnInfo);
-                foreach (var item in experimentResult.RunDetails.ToArray())
-                {
-                    rtbResault.Text += item.TrainerName;
-                    rtbResault.Text += "\r\n";
-                    rtbResault.Text += item.ValidationMetrics;
-                    rtbResault.Text += "\r\n";
-                }
-            }
-            if (trainerType == typeof(RecommendationExperimentSettings))
-            {
-
-            }
-            if (trainerType == typeof(RankingExperimentSettings))
-            {
-
-            }
+            this.Close();
         }
 
 
@@ -198,6 +158,80 @@ namespace ML
             if (result == DialogResult.OK)
             {
                 tbxFileName.Text = openFileDialog1.FileName;
+            }
+        }
+
+        private void dgvDataPreview_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvDataPreview.SelectedColumns.Count == 0)
+            {
+                return;
+            }
+            disableUpdates = true;
+            int selectedIndex = dgvDataPreview.SelectedColumns[0].Index;
+            ColumnInfo columnInfo = mlHolder.ColumnInfos[selectedIndex];
+
+            cbIsLabel.Checked = columnInfo.IsLabel;
+            foreach (string item in lbDataKinds.Items)
+            {
+                if (columnInfo.ThisDataKind.ToString() == item)
+                {
+                    lbDataKinds.SelectedItem = item;
+                    break;
+                }
+            }
+            disableUpdates = false;
+        }
+
+        private void DataSettingChanged(object sender, EventArgs e)
+        {
+            if (dgvDataPreview.SelectedColumns.Count == 0 || lbDataKinds.SelectedItems.Count == 0 || disableUpdates)
+            {
+                return;
+            }
+            int selectedIndex = dgvDataPreview.SelectedColumns[0].Index;
+            ColumnInfo columnInfo = mlHolder.ColumnInfos[selectedIndex];
+            DataKind dataKind = DataKind.String;
+            Enum.TryParse<DataKind>(lbDataKinds.SelectedItem.ToString(), out dataKind);
+            columnInfo.ThisDataKind = dataKind;
+            columnInfo.IsLabel = cbIsLabel.Checked;
+        }
+
+        private void btnTrainModel_Click(object sender, EventArgs e)
+        {
+            SetScene(CurrentScene + 1);
+            List<string> excludedAgorithmsList = new List<string>();
+            for (int i = 0; i < cblModels.Items.Count; i++)
+            {
+                if (cblModels.GetItemCheckState(i) == CheckState.Unchecked)
+                {
+                    excludedAgorithmsList.Add(cblModels.GetItemText(cblModels.Items[i]));
+                }
+            }
+            mlHolder.TrainModel(excludedAgorithmsList.ToArray(), (uint)numTimeout.Value, folderBrowserDialog1.SelectedPath);
+        }
+
+        private void dgvResultMain_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvResultMain.SelectedRows.Count == 0)
+            {
+                return;
+            }
+            int selectedIndex = dgvResultMain.SelectedRows[0].Index;
+            dgvResultSide.DataSource = mlHolder.ShallowExperimentResults[selectedIndex].Scores;
+        }
+
+        private void btnSaveModel_Click(object sender, EventArgs e)
+        {
+            if (dgvResultMain.SelectedRows.Count == 0)
+            {
+                return;
+            }
+            DialogResult dialogResult = saveFileDialog1.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                int selectedIndex = dgvResultMain.SelectedRows[0].Index;
+                mlHolder.SaveModel(mlHolder.ShallowExperimentResults[selectedIndex],saveFileDialog1.FileName);
             }
         }
     }
