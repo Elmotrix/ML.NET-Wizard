@@ -567,7 +567,7 @@ namespace ML
             this.cblModels.FormattingEnabled = true;
             this.cblModels.Location = new System.Drawing.Point(0, 34);
             this.cblModels.Name = "cblModels";
-            this.cblModels.Size = new System.Drawing.Size(179, 83);
+            this.cblModels.Size = new System.Drawing.Size(300, 83);
             this.cblModels.TabIndex = 0;
             // 
             // pnlSaveFolder
@@ -682,9 +682,9 @@ namespace ML
             this.lblResault.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblResault.Location = new System.Drawing.Point(0, 0);
             this.lblResault.Name = "lblResault";
-            this.lblResault.Size = new System.Drawing.Size(48, 15);
+            this.lblResault.Size = new System.Drawing.Size(42, 15);
             this.lblResault.TabIndex = 0;
-            this.lblResault.Text = "Resault:";
+            this.lblResault.Text = "Result:";
             // 
             // pnlWaiting
             // 
