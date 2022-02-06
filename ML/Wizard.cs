@@ -55,25 +55,26 @@ namespace ML
             scenePanels[Scene].Dock = DockStyle.Fill;
             CurrentScene = Scene;
             btnPrev.Enabled = (Scene != 0);
-            if (pnlSelectOutput.Visible)
-            {
-                LoadDataPreview();
-            }
             btnTrainModel.Visible = pnlConfig.Visible;
             btnFinish.Visible = pnlResault.Visible;
             btnSaveModel.Visible = pnlResault.Visible;
+            btnExportResults.Visible = pnlResault.Visible;
             btnPrev.Visible = !pnlResault.Visible;
             btnNext.Visible = !(pnlResault.Visible || pnlConfig.Visible);
             pnlNavigation.Visible = !pnlWaiting.Visible;
-            if (pnlResault.Visible)
-            {
-                ShowResults();
-            }
             tmr1sec.Enabled = pnlWaiting.Visible;
             if (pnlWaiting.Visible)
             {
                 pbTrainingProgress.Value = 0;
-                pbTrainingProgress.Maximum = (int)numTimeout.Value;
+                pbTrainingProgress.Maximum = (int)numTimeout.Value+5;
+            }
+            if (pnlSelectOutput.Visible)
+            {
+                LoadDataPreview();
+            }
+            if (pnlResault.Visible)
+            {
+                ShowResults();
             }
         }
         private void ShowResults()
@@ -97,7 +98,10 @@ namespace ML
                 row[1] = results[i].Algorithm;
                 for (int j = 0; j < results[0].Scores.Length; j++)
                 {
-                    row[j+2] = results[i].Scores[j].Score;
+                    if (j < results[i].Scores.Length)
+                    {
+                        row[j+2] = results[i].Scores[j].Score;
+                    }
                 }
                 dt.Rows.Add(row);
             }
@@ -108,7 +112,18 @@ namespace ML
         private void LoadDataPreview()
         {
             dgvDataPreview.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect;
-            dgvDataPreview.DataSource = mlHolder.LoadData(tbxFileName.Text, tbxSeparator.Text[0], cbHasHeader.Checked);
+            if (tabcrDataSources.SelectedTab == tabDataFromFile)
+            {
+                dgvDataPreview.DataSource = mlHolder.LoadDataSchemaFromFile(tbxFileName.Text, tbxSeparator.Text[0], cbHasHeader.Checked);
+            }
+            else if (tabcrDataSources.SelectedTab == tabDataFromFile)
+            {
+                dgvDataPreview.DataSource = mlHolder.LoadDataSchemaFromDb(txtConnString.Text, txtQuerry.Text);
+            }
+            else
+            {
+                dgvDataPreview.DataSource = null;
+            }
             foreach (DataGridViewColumn column in dgvDataPreview.Columns)
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -129,31 +144,31 @@ namespace ML
         private void btnBinClas_Click(object sender, EventArgs e)
         {
             SetScene(CurrentScene + 1);
-            SetAlgorithms(mlHolder.SetExperiment<BinaryExperimentSettings>());
+            SetAlgorithms(mlHolder.SetExperimentType(ModelType.Binary));
         }
 
         private void btnMultiClas_Click(object sender, EventArgs e)
         {
             SetScene(CurrentScene + 1);
-            SetAlgorithms(mlHolder.SetExperiment<MulticlassExperimentSettings>());
+            SetAlgorithms(mlHolder.SetExperimentType(ModelType.Multiclass));
         }
 
         private void btnReg_Click(object sender, EventArgs e)
         {
             SetScene(CurrentScene + 1);
-            SetAlgorithms(mlHolder.SetExperiment<RegressionExperimentSettings>());
+            SetAlgorithms(mlHolder.SetExperimentType(ModelType.Regression));
         }
 
         private void btnRecommendation_Click(object sender, EventArgs e)
         {
             SetScene(CurrentScene + 1);
-            SetAlgorithms(mlHolder.SetExperiment<RecommendationExperimentSettings>());
+            SetAlgorithms(mlHolder.SetExperimentType(ModelType.Recommendation));
         }
 
         private void btnRanking_Click(object sender, EventArgs e)
         {
             SetScene(CurrentScene + 1);
-            SetAlgorithms(mlHolder.SetExperiment<RankingExperimentSettings>());
+            SetAlgorithms(mlHolder.SetExperimentType(ModelType.Ranking));
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -202,7 +217,7 @@ namespace ML
             }
             disableUpdates = true;
             int selectedIndex = dgvDataPreview.SelectedColumns[0].Index;
-            ColumnInfo columnInfo = mlHolder.ColumnInfos[selectedIndex];
+            ColumnInfo columnInfo = mlHolder.DataLoader.ColumnInfos[selectedIndex];
 
             cbIsLabel.Checked = columnInfo.IsLabel;
             foreach (string item in lbDataKinds.Items)
@@ -223,7 +238,7 @@ namespace ML
                 return;
             }
             int selectedIndex = dgvDataPreview.SelectedColumns[0].Index;
-            ColumnInfo columnInfo = mlHolder.ColumnInfos[selectedIndex];
+            ColumnInfo columnInfo = mlHolder.DataLoader.ColumnInfos[selectedIndex];
             DataKind dataKind = DataKind.String;
             Enum.TryParse<DataKind>(lbDataKinds.SelectedItem.ToString(), out dataKind);
             columnInfo.ThisDataKind = dataKind;
@@ -250,17 +265,39 @@ namespace ML
             {
                 return;
             }
-            DialogResult dialogResult = saveFileDialog1.ShowDialog();
-            if (dialogResult == DialogResult.OK)
+            if (dgvResults.SelectedRows.Count == 1)
             {
-                int selectedIndex = Convert.ToInt32(dgvResults.SelectedRows[0].Cells[0].Value);
-                foreach (var item in mlHolder.ShallowExperimentResults)
+                saveFileDialog1.FileName = "onnx_model";
+                saveFileDialog1.DefaultExt = "onnx";
+                DialogResult dialogResult = saveFileDialog1.ShowDialog();
+                if (dialogResult == DialogResult.OK)
                 {
-                    if (item.Index == selectedIndex)
+                    int selectedIndex = Convert.ToInt32(dgvResults.SelectedRows[0].Cells[0].Value);
+                    SaveOnnxModel(selectedIndex, saveFileDialog1.FileName);
+                }
+            }
+            else
+            {
+                DialogResult dialogResult = folderBrowserDialog1.ShowDialog();
+                if (dialogResult == DialogResult.OK)
+                {
+                    for (int i = 0; i < dgvResults.SelectedRows.Count; i++)
                     {
-                        mlHolder.SaveModel(item, saveFileDialog1.FileName);
-                        return;
+                        int selectedIndex = Convert.ToInt32(dgvResults.SelectedRows[i].Cells[0].Value);
+                        string fileName = folderBrowserDialog1.SelectedPath + "\\Model_" + selectedIndex + "_" + dgvResults.SelectedRows[i].Cells[1].Value + ".onnx";
+                        SaveOnnxModel(selectedIndex, fileName);
                     }
+                }
+            }
+        }
+        private void SaveOnnxModel(int index, string filePath)
+        {
+            foreach (var item in mlHolder.ShallowExperimentResults)
+            {
+                if (item.Index == index)
+                {
+                    mlHolder.SaveModel(item, filePath);
+                    return;
                 }
             }
         }
@@ -283,6 +320,35 @@ namespace ML
                     {
                         dgvResults.Rows[i].DefaultCellStyle.BackColor = Color.Aqua;
                     }
+                }
+            }
+        }
+
+        private void btnExportResults_Click(object sender, EventArgs e)
+        {
+            char sep = ',';
+            char des = '.';
+            saveFileDialog1.FileName = "AutoMLResaultsReport";
+            saveFileDialog1.DefaultExt = "csv";
+            DialogResult dialogResult = saveFileDialog1.ShowDialog();
+            if (dialogResult == DialogResult.OK)
+            {
+                using StreamWriter file = new(saveFileDialog1.FileName, append: false);
+                for (int i = -1; i < dgvResults.Rows.Count; i++)
+                {
+                    string thisLine = "";
+                    for (int j = 0; j < dgvResults.Columns.Count; j++)
+                    {
+                        if (i >= 0)
+                        {
+                            thisLine += dgvResults[j, i].Value.ToString().Replace(',', des) + sep;
+                        }
+                        else
+                        {
+                            thisLine += dgvResults.Columns[j].HeaderText + sep;
+                        }
+                    }
+                    file.WriteLine(thisLine.TrimEnd(sep));
                 }
             }
         }

@@ -4,6 +4,8 @@ using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,124 +22,49 @@ namespace ML
             mlContext.Log += MlContext_Log;
         }
 
-
-        ExperimentSettings experimentSettings;
         MLContext mlContext = new MLContext();
-        List<ColumnInfo> columnInfos = new List<ColumnInfo>();
         object ExperimentResult;
         List<ShallowExperimentResult> ShallowExperimentResultsList;
-        public List<ColumnInfo> ColumnInfos { get { return columnInfos; } }
         public ShallowExperimentResult[] ShallowExperimentResults { get { return ShallowExperimentResultsList.ToArray(); } }
-        string FilePath;
-        char Separator;
-        bool HasHeader;
+        public iDataLoader DataLoader { get; internal set; }
         public event EventHandler TrainingComplete;
         public event EventHandler<LoggingEventArgs> AutoMLLog;
         IDataView data;
+        ModelType thisModelType = ModelType.None;
         private void MlContext_Log(object sender, LoggingEventArgs e)
         {
             AutoMLLog?.Invoke(sender, e);
         }
-        public DataTable LoadData(string filePath,char separator, bool hasHeader)
+        public DataTable LoadDataSchemaFromFile(string filePath,char separator, bool hasHeader)
         {
-            FilePath = filePath;
-            Separator = separator;
-            HasHeader = hasHeader;
-            DataTable dt = new DataTable();
-            using (StreamReader sr = new StreamReader(filePath))
-            {
-                string[] headers = null;
-                if (hasHeader)
-                {
-                    headers = sr.ReadLine().Split(separator);
-                    foreach (string header in headers)
-                    {
-                        dt.Columns.Add(header);
-                    }
-                }
-                int j = 0;
-                while (!sr.EndOfStream && j < 20)
-                {
-                    j++;
-                    string[] rows = sr.ReadLine().Split(separator);
-                    if (headers == null)
-                    {
-                        headers = new string[rows.Length];
-                        for (int i = 0; i < rows.Length; i++)
-                        {
-                            headers[i] = "#" + i;
-                            dt.Columns.Add(headers[i]);
-                        }
-                    }
-                    DataRow dr = dt.NewRow();
-                    for (int i = 0; i < rows.Length; i++)
-                    {
-                        dr[i] = rows[i];
-                    }
-                    dt.Rows.Add(dr);
-                }
-            }
-
-
-            columnInfos = new List<ColumnInfo>();
-            for (int i = 0; i < dt.Columns.Count; i++)
-            {
-                DataKind dataKind = DataKind.String;
-                bool tryBoolValue = false;
-                float tryFloatValue = 0;
-                if (bool.TryParse(dt.Rows[0].ItemArray[i].ToString(), out tryBoolValue))
-                {
-                    dataKind = DataKind.Boolean;
-                }
-                else if (Single.TryParse(dt.Rows[0].ItemArray[i].ToString(), out tryFloatValue))
-                {
-                    dataKind = DataKind.Single;
-                }
-                else if (Single.TryParse(dt.Rows[0].ItemArray[i].ToString().Replace('.', ','), out tryFloatValue))
-                {
-                    dataKind = DataKind.Single;
-                }
-                columnInfos.Add(new ColumnInfo()
-                {
-                    Index = i,
-                    Name = dt.Columns[i].ColumnName,
-                    ThisDataKind = dataKind
-                });
-            }
-            return dt;
+            DataLoader = new FileDataLoader(filePath, separator, hasHeader);
+            return DataLoader.LoadDataSchema();
+        }
+        public DataTable LoadDataSchemaFromDb(string connectionString, string commandText)
+        {
+            DataLoader = new DbDataLoader(connectionString, commandText);
+            return DataLoader.LoadDataSchema();
         }
 
-        public string[] SetExperiment<T>() where T: ExperimentSettings, new()
+        public string[] SetExperimentType(ModelType modelType)
         {
-            experimentSettings = new T();
-            return GetAvailableAlgorithms<T>();
-        }
-
-        private string[] GetAvailableAlgorithms<T>()
-        {
-            if (typeof(T) == typeof(BinaryExperimentSettings))
+            thisModelType = modelType;
+            switch (modelType)
             {
-                return System.Enum.GetNames(typeof(BinaryClassificationTrainer));
-            }
-            else
-            if (typeof(T) == typeof(MulticlassExperimentSettings))
-            {
-                return System.Enum.GetNames(typeof(MulticlassClassificationTrainer));
-            }
-            else
-            if (typeof(T) == typeof(RegressionExperimentSettings))
-            {
-                return System.Enum.GetNames(typeof(RegressionTrainer));
-            }
-            else
-            if (typeof(T) == typeof(RecommendationExperimentSettings))
-            {
-                return System.Enum.GetNames(typeof(RecommendationTrainer));
-            }
-            else
-            if (typeof(T) == typeof(RankingExperimentSettings))
-            {
-                return System.Enum.GetNames(typeof(RankingTrainer));
+                case ModelType.None:
+                    break;
+                case ModelType.Binary:
+                    return System.Enum.GetNames(typeof(BinaryClassificationTrainer));
+                case ModelType.Multiclass:
+                    return System.Enum.GetNames(typeof(MulticlassClassificationTrainer));
+                case ModelType.Regression:
+                    return System.Enum.GetNames(typeof(RegressionTrainer));
+                case ModelType.Recommendation:
+                    return System.Enum.GetNames(typeof(RecommendationTrainer));
+                case ModelType.Ranking:
+                    return System.Enum.GetNames(typeof(RankingTrainer));
+                default:
+                    break;
             }
             return new string[0];
         }
@@ -148,38 +75,26 @@ namespace ML
             }).Start();
         }
 
-
         public void ExecuteTraining(string[] excludedAlgorithms = null, uint timeout = 3600, string saveFolder = "")
         {
             ShallowExperimentResultsList = new List<ShallowExperimentResult>();
             var columnInfo = new ColumnInformation();
 
+            data = DataLoader.LoadData(mlContext);
 
-            TextLoader.Column[] columns = new TextLoader.Column[columnInfos.Count];
-            for (int i = 0; i < columnInfos.Count; i++)
-            {
-                columns[i] = columnInfos[i].GetColumn();
-            }
 
-            TextLoader textLoader = mlContext.Data.CreateTextLoader(columns, hasHeader: HasHeader, separatorChar: Separator);
-            data = textLoader.Load(FilePath);
-
-            foreach (ColumnInfo item in columnInfos)
+            foreach (ColumnInfo item in DataLoader.ColumnInfos)
             {
                 if (item.IsLabel)
                 {
                     columnInfo.LabelColumnName = item.Name;
                 }
             }
-            Type trainerType = experimentSettings.GetType();
-            experimentSettings.MaxExperimentTimeInSeconds = timeout;
-            if (saveFolder != "")
+
+            if (thisModelType == ModelType.Binary)
             {
-                experimentSettings.CacheDirectoryName = saveFolder;
-            }
-            if (trainerType == typeof(BinaryExperimentSettings))
-            {
-                BinaryExperimentSettings experimentSetting = (BinaryExperimentSettings)experimentSettings;
+                BinaryExperimentSettings experimentSetting = new BinaryExperimentSettings();
+                SetExperimentSettings(experimentSetting, timeout, saveFolder);
                 if (excludedAlgorithms != null)
                 {
                     for (int i = 0; i < excludedAlgorithms.Length; i++)
@@ -190,31 +105,12 @@ namespace ML
                 BinaryClassificationExperiment experiment = mlContext.Auto().CreateBinaryClassificationExperiment(experimentSetting);
                 ExperimentResult<BinaryClassificationMetrics> experimentResult = experiment.Execute(data, columnInfo);
                 ExperimentResult = experimentResult;
-                int j = 0;
-                foreach (var item in experimentResult.RunDetails)
-                {
-                    ShallowExperimentResult result = new ShallowExperimentResult();
-                    result.Index = j;
-                    result.Algorithm = item.TrainerName;
-                    if (item == experimentResult.BestRun)
-                    {
-                        result.IsBest = true;
-                    }
-                    foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
-                    {
-                        if (propertyInfo.PropertyType == typeof(double))
-                        {
-                            result.AddScore(propertyInfo.Name, (double)propertyInfo.GetValue(item.ValidationMetrics));
-                        }
-                    }
-                    result.Model = item.Model;
-                    ShallowExperimentResultsList.Add(result);
-                    j++;
-                }
+                CreateShallowResults<BinaryClassificationMetrics>(experimentResult);
             }
-            if (trainerType == typeof(MulticlassExperimentSettings))
+            if (thisModelType == ModelType.Multiclass)
             {
-                MulticlassExperimentSettings experimentSetting = (MulticlassExperimentSettings)experimentSettings;
+                MulticlassExperimentSettings experimentSetting = new MulticlassExperimentSettings();
+                SetExperimentSettings(experimentSetting, timeout, saveFolder);
                 if (excludedAlgorithms != null)
                 {
                     for (int i = 0; i < excludedAlgorithms.Length; i++)
@@ -225,31 +121,12 @@ namespace ML
                 MulticlassClassificationExperiment experiment = mlContext.Auto().CreateMulticlassClassificationExperiment(experimentSetting);
                 ExperimentResult<MulticlassClassificationMetrics> experimentResult = experiment.Execute(data, columnInfo);
                 ExperimentResult = experimentResult;
-                int j = 0;
-                foreach (var item in experimentResult.RunDetails)
-                {
-                    ShallowExperimentResult result = new ShallowExperimentResult();
-                    result.Index = j;
-                    result.Algorithm = item.TrainerName;
-                    if (item == experimentResult.BestRun)
-                    {
-                        result.IsBest = true;
-                    }
-                    foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
-                    {
-                        if (propertyInfo.PropertyType == typeof(double))
-                        {
-                            result.AddScore(propertyInfo.Name, (double)propertyInfo.GetValue(item.ValidationMetrics));
-                        }
-                    }
-                    result.Model = item.Model;
-                    ShallowExperimentResultsList.Add(result);
-                    j++;
-                }
+                CreateShallowResults<MulticlassClassificationMetrics>(experimentResult);
             }
-            if (trainerType == typeof(RegressionExperimentSettings))
+            if (thisModelType == ModelType.Regression)
             {
-                RegressionExperimentSettings experimentSetting = (RegressionExperimentSettings)experimentSettings;
+                RegressionExperimentSettings experimentSetting = new RegressionExperimentSettings();
+                SetExperimentSettings(experimentSetting, timeout, saveFolder);
                 if (excludedAlgorithms != null)
                 {
                     for (int i = 0; i < excludedAlgorithms.Length; i++)
@@ -260,31 +137,12 @@ namespace ML
                 RegressionExperiment experiment = mlContext.Auto().CreateRegressionExperiment(experimentSetting);
                 ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(data, columnInfo);
                 ExperimentResult = experimentResult;
-                int j = 0;
-                foreach (var item in experimentResult.RunDetails)
-                {
-                    ShallowExperimentResult result = new ShallowExperimentResult();
-                    result.Index = j;
-                    result.Algorithm = item.TrainerName;
-                    if (item == experimentResult.BestRun)
-                    {
-                        result.IsBest = true;
-                    }
-                    foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
-                    {
-                        if (propertyInfo.PropertyType == typeof(double))
-                        {
-                            result.AddScore(propertyInfo.Name, (double)propertyInfo.GetValue(item.ValidationMetrics));
-                        }
-                    }
-                    result.Model = item.Model;
-                    ShallowExperimentResultsList.Add(result);
-                    j++;
-                }
+                CreateShallowResults<RegressionMetrics>(experimentResult);
             }
-            if (trainerType == typeof(RecommendationExperimentSettings))
+            if (thisModelType == ModelType.Recommendation)
             {
-                RecommendationExperimentSettings experimentSetting = (RecommendationExperimentSettings)experimentSettings;
+                RecommendationExperimentSettings experimentSetting = new RecommendationExperimentSettings();
+                SetExperimentSettings(experimentSetting, timeout, saveFolder);
                 if (excludedAlgorithms != null)
                 {
                     for (int i = 0; i < excludedAlgorithms.Length; i++)
@@ -295,31 +153,12 @@ namespace ML
                 RecommendationExperiment experiment = mlContext.Auto().CreateRecommendationExperiment(experimentSetting);
                 ExperimentResult<RegressionMetrics> experimentResult = experiment.Execute(data, columnInfo);
                 ExperimentResult = experimentResult;
-                int j = 0;
-                foreach (var item in experimentResult.RunDetails)
-                {
-                    ShallowExperimentResult result = new ShallowExperimentResult();
-                    result.Index = j;
-                    result.Algorithm = item.TrainerName;
-                    if (item == experimentResult.BestRun)
-                    {
-                        result.IsBest = true;
-                    }
-                    foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
-                    {
-                        if (propertyInfo.PropertyType == typeof(double))
-                        {
-                            result.AddScore(propertyInfo.Name, (double)propertyInfo.GetValue(item.ValidationMetrics));
-                        }
-                    }
-                    result.Model = item.Model;
-                    ShallowExperimentResultsList.Add(result);
-                    j++;
-                }
+                CreateShallowResults<RegressionMetrics>(experimentResult);
             }
-            if (trainerType == typeof(RankingExperimentSettings))
+            if (thisModelType == ModelType.Ranking)
             {
-                RankingExperimentSettings experimentSetting = (RankingExperimentSettings)experimentSettings;
+                RankingExperimentSettings experimentSetting = new RankingExperimentSettings();
+                SetExperimentSettings(experimentSetting, timeout, saveFolder);
                 if (excludedAlgorithms != null)
                 {
                     for (int i = 0; i < excludedAlgorithms.Length; i++)
@@ -330,29 +169,44 @@ namespace ML
                 RankingExperiment experiment = mlContext.Auto().CreateRankingExperiment(experimentSetting);
                 ExperimentResult<RankingMetrics> experimentResult = experiment.Execute(data, columnInfo);
                 ExperimentResult = experimentResult;
-                int j = 0;
-                foreach (var item in experimentResult.RunDetails)
-                {
-                    ShallowExperimentResult result = new ShallowExperimentResult();
-                    result.Index = j;
-                    result.Algorithm = item.TrainerName;
-                    if (item == experimentResult.BestRun)
-                    {
-                        result.IsBest = true;
-                    }
-                    foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
-                    {
-                        if (propertyInfo.PropertyType == typeof(double))
-                        {
-                            result.AddScore(propertyInfo.Name, (double)propertyInfo.GetValue(item.ValidationMetrics));
-                        }
-                    }
-                    result.Model = item.Model;
-                    ShallowExperimentResultsList.Add(result);
-                    j++;
-                }
+                CreateShallowResults<RankingMetrics>(experimentResult);
             }
             TrainingComplete?.Invoke(this, new EventArgs());
+        }
+        private void SetExperimentSettings(ExperimentSettings experimentSettings, uint timeout, string saveFolder)
+        {
+            experimentSettings.MaxExperimentTimeInSeconds = timeout;
+            if (saveFolder != "")
+            {
+                experimentSettings.CacheDirectoryName = saveFolder;
+            }
+        }
+        private void CreateShallowResults<T>(ExperimentResult<T> experimentResult) 
+        {
+            int j = 0;
+            foreach (var item in experimentResult.RunDetails)
+            {
+                ShallowExperimentResult result = new ShallowExperimentResult();
+                result.Index = j;
+                result.Algorithm = item.TrainerName;
+                if (item == experimentResult.BestRun)
+                {
+                    result.IsBest = true;
+                }
+                if (item.ValidationMetrics != null)
+                {
+                    foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
+                    {
+                        if (propertyInfo.PropertyType == typeof(double) || propertyInfo.PropertyType == typeof(int))
+                        {
+                            result.AddScore(propertyInfo.Name, Convert.ToDouble(propertyInfo.GetValue(item.ValidationMetrics)));
+                        }
+                    }
+                }
+                result.Model = item.Model;
+                ShallowExperimentResultsList.Add(result);
+                j++;
+            }
         }
         public void SaveModel(ShallowExperimentResult experimentResult, string path)
         {
