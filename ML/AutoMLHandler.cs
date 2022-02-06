@@ -15,6 +15,11 @@ namespace ML
 {
     class AutoMLHandler
     {
+        public AutoMLHandler()
+        {
+            mlContext.Log += MlContext_Log;
+        }
+
 
         ExperimentSettings experimentSettings;
         MLContext mlContext = new MLContext();
@@ -23,13 +28,16 @@ namespace ML
         List<ShallowExperimentResult> ShallowExperimentResultsList;
         public List<ColumnInfo> ColumnInfos { get { return columnInfos; } }
         public ShallowExperimentResult[] ShallowExperimentResults { get { return ShallowExperimentResultsList.ToArray(); } }
-        string[] algorithms;
         string FilePath;
         char Separator;
         bool HasHeader;
-        public delegate void TrainingCompleteEventHandler(object sender, EventArgs e);
-        public event TrainingCompleteEventHandler TrainingComplete;
+        public event EventHandler TrainingComplete;
+        public event EventHandler<LoggingEventArgs> AutoMLLog;
         IDataView data;
+        private void MlContext_Log(object sender, LoggingEventArgs e)
+        {
+            AutoMLLog?.Invoke(sender, e);
+        }
         public DataTable LoadData(string filePath,char separator, bool hasHeader)
         {
             FilePath = filePath;
@@ -188,6 +196,10 @@ namespace ML
                     ShallowExperimentResult result = new ShallowExperimentResult();
                     result.Index = j;
                     result.Algorithm = item.TrainerName;
+                    if (item == experimentResult.BestRun)
+                    {
+                        result.IsBest = true;
+                    }
                     foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
                     {
                         if (propertyInfo.PropertyType == typeof(double))
@@ -219,6 +231,10 @@ namespace ML
                     ShallowExperimentResult result = new ShallowExperimentResult();
                     result.Index = j;
                     result.Algorithm = item.TrainerName;
+                    if (item == experimentResult.BestRun)
+                    {
+                        result.IsBest = true;
+                    }
                     foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
                     {
                         if (propertyInfo.PropertyType == typeof(double))
@@ -250,6 +266,10 @@ namespace ML
                     ShallowExperimentResult result = new ShallowExperimentResult();
                     result.Index = j;
                     result.Algorithm = item.TrainerName;
+                    if (item == experimentResult.BestRun)
+                    {
+                        result.IsBest = true;
+                    }
                     foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
                     {
                         if (propertyInfo.PropertyType == typeof(double))
@@ -281,6 +301,10 @@ namespace ML
                     ShallowExperimentResult result = new ShallowExperimentResult();
                     result.Index = j;
                     result.Algorithm = item.TrainerName;
+                    if (item == experimentResult.BestRun)
+                    {
+                        result.IsBest = true;
+                    }
                     foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
                     {
                         if (propertyInfo.PropertyType == typeof(double))
@@ -312,6 +336,10 @@ namespace ML
                     ShallowExperimentResult result = new ShallowExperimentResult();
                     result.Index = j;
                     result.Algorithm = item.TrainerName;
+                    if (item == experimentResult.BestRun)
+                    {
+                        result.IsBest = true;
+                    }
                     foreach (PropertyInfo propertyInfo in item.ValidationMetrics.GetType().GetProperties())
                     {
                         if (propertyInfo.PropertyType == typeof(double))

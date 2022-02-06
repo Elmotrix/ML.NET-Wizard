@@ -29,6 +29,7 @@ namespace ML
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Wizard));
             this.pnlSelectMLtype = new System.Windows.Forms.Panel();
             this.btnRanking = new System.Windows.Forms.Button();
@@ -53,8 +54,6 @@ namespace ML
             this.btnPrev = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.pnlTest = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.pnlSelectOutput = new System.Windows.Forms.Panel();
             this.dgvDataPreview = new System.Windows.Forms.DataGridView();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -73,20 +72,19 @@ namespace ML
             this.lblHeaderConfig = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlResault = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.dgvResultMain = new System.Windows.Forms.DataGridView();
-            this.dgvResultSide = new System.Windows.Forms.DataGridView();
+            this.dgvResults = new System.Windows.Forms.DataGridView();
             this.lblResault = new System.Windows.Forms.Label();
             this.pnlWaiting = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbTrainingProgress = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.tmr1sec = new System.Windows.Forms.Timer(this.components);
             this.pnlSelectMLtype.SuspendLayout();
             this.pnlSelectData.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.pnlNavigation.SuspendLayout();
-            this.pnlTest.SuspendLayout();
             this.pnlSelectOutput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataPreview)).BeginInit();
             this.panel5.SuspendLayout();
@@ -96,12 +94,7 @@ namespace ML
             this.pnlTimeout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
             this.pnlResault.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvResultMain)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvResultSide)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.pnlWaiting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -195,10 +188,10 @@ namespace ML
             this.pnlSelectData.Controls.Add(this.panel4);
             this.pnlSelectData.Controls.Add(this.panel3);
             this.pnlSelectData.Controls.Add(this.lblHeaderSelectData);
-            this.pnlSelectData.Location = new System.Drawing.Point(272, 169);
+            this.pnlSelectData.Location = new System.Drawing.Point(886, 239);
             this.pnlSelectData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlSelectData.Name = "pnlSelectData";
-            this.pnlSelectData.Size = new System.Drawing.Size(574, 321);
+            this.pnlSelectData.Size = new System.Drawing.Size(160, 161);
             this.pnlSelectData.TabIndex = 2;
             // 
             // panel4
@@ -209,7 +202,7 @@ namespace ML
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 38);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(574, 44);
+            this.panel4.Size = new System.Drawing.Size(160, 44);
             this.panel4.TabIndex = 8;
             // 
             // tbxSeparator
@@ -239,7 +232,7 @@ namespace ML
             this.cbHasHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.cbHasHeader.Location = new System.Drawing.Point(0, 0);
             this.cbHasHeader.Name = "cbHasHeader";
-            this.cbHasHeader.Size = new System.Drawing.Size(574, 19);
+            this.cbHasHeader.Size = new System.Drawing.Size(160, 19);
             this.cbHasHeader.TabIndex = 0;
             this.cbHasHeader.Text = "Has Header";
             this.cbHasHeader.UseVisualStyleBackColor = true;
@@ -251,7 +244,7 @@ namespace ML
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 15);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(574, 23);
+            this.panel3.Size = new System.Drawing.Size(160, 23);
             this.panel3.TabIndex = 7;
             // 
             // tbxFileName
@@ -259,13 +252,13 @@ namespace ML
             this.tbxFileName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbxFileName.Location = new System.Drawing.Point(0, 0);
             this.tbxFileName.Name = "tbxFileName";
-            this.tbxFileName.Size = new System.Drawing.Size(499, 23);
+            this.tbxFileName.Size = new System.Drawing.Size(85, 23);
             this.tbxFileName.TabIndex = 1;
             // 
             // btnSelectFile
             // 
             this.btnSelectFile.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnSelectFile.Location = new System.Drawing.Point(499, 0);
+            this.btnSelectFile.Location = new System.Drawing.Point(85, 0);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(75, 23);
             this.btnSelectFile.TabIndex = 0;
@@ -363,25 +356,6 @@ namespace ML
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // pnlTest
-            // 
-            this.pnlTest.Controls.Add(this.button1);
-            this.pnlTest.Location = new System.Drawing.Point(12, 378);
-            this.pnlTest.Name = "pnlTest";
-            this.pnlTest.Size = new System.Drawing.Size(98, 112);
-            this.pnlTest.TabIndex = 4;
-            this.pnlTest.Visible = false;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(61, 31);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // pnlSelectOutput
             // 
@@ -565,67 +539,31 @@ namespace ML
             // 
             // pnlResault
             // 
-            this.pnlResault.Controls.Add(this.splitContainer1);
+            this.pnlResault.Controls.Add(this.dgvResults);
             this.pnlResault.Controls.Add(this.lblResault);
-            this.pnlResault.Location = new System.Drawing.Point(942, 18);
+            this.pnlResault.Location = new System.Drawing.Point(311, 208);
             this.pnlResault.Name = "pnlResault";
-            this.pnlResault.Size = new System.Drawing.Size(132, 126);
+            this.pnlResault.Size = new System.Drawing.Size(472, 282);
             this.pnlResault.TabIndex = 7;
             // 
-            // splitContainer1
+            // dgvResults
             // 
-            this.splitContainer1.Cursor = System.Windows.Forms.Cursors.VSplit;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 15);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.dgvResultMain);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.dgvResultSide);
-            this.splitContainer1.Size = new System.Drawing.Size(132, 111);
-            this.splitContainer1.SplitterDistance = 59;
-            this.splitContainer1.TabIndex = 1;
-            // 
-            // dgvResultMain
-            // 
-            this.dgvResultMain.AllowUserToAddRows = false;
-            this.dgvResultMain.AllowUserToDeleteRows = false;
-            this.dgvResultMain.AllowUserToResizeRows = false;
-            this.dgvResultMain.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvResultMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvResultMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvResultMain.Location = new System.Drawing.Point(0, 0);
-            this.dgvResultMain.MultiSelect = false;
-            this.dgvResultMain.Name = "dgvResultMain";
-            this.dgvResultMain.ReadOnly = true;
-            this.dgvResultMain.RowHeadersVisible = false;
-            this.dgvResultMain.RowTemplate.Height = 25;
-            this.dgvResultMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvResultMain.ShowEditingIcon = false;
-            this.dgvResultMain.Size = new System.Drawing.Size(59, 111);
-            this.dgvResultMain.TabIndex = 0;
-            this.dgvResultMain.SelectionChanged += new System.EventHandler(this.dgvResultMain_SelectionChanged);
-            // 
-            // dgvResultSide
-            // 
-            this.dgvResultSide.AllowUserToAddRows = false;
-            this.dgvResultSide.AllowUserToDeleteRows = false;
-            this.dgvResultSide.AllowUserToResizeRows = false;
-            this.dgvResultSide.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvResultSide.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvResultSide.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvResultSide.Location = new System.Drawing.Point(0, 0);
-            this.dgvResultSide.MultiSelect = false;
-            this.dgvResultSide.Name = "dgvResultSide";
-            this.dgvResultSide.ReadOnly = true;
-            this.dgvResultSide.RowTemplate.Height = 25;
-            this.dgvResultSide.ShowEditingIcon = false;
-            this.dgvResultSide.Size = new System.Drawing.Size(69, 111);
-            this.dgvResultSide.TabIndex = 0;
+            this.dgvResults.AllowUserToAddRows = false;
+            this.dgvResults.AllowUserToDeleteRows = false;
+            this.dgvResults.AllowUserToResizeRows = false;
+            this.dgvResults.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvResults.Location = new System.Drawing.Point(0, 15);
+            this.dgvResults.MultiSelect = false;
+            this.dgvResults.Name = "dgvResults";
+            this.dgvResults.ReadOnly = true;
+            this.dgvResults.RowTemplate.Height = 25;
+            this.dgvResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvResults.ShowEditingIcon = false;
+            this.dgvResults.Size = new System.Drawing.Size(472, 267);
+            this.dgvResults.TabIndex = 1;
+            this.dgvResults.Sorted += new System.EventHandler(this.dgvResults_Sorted);
             // 
             // lblResault
             // 
@@ -640,10 +578,11 @@ namespace ML
             // pnlWaiting
             // 
             this.pnlWaiting.Controls.Add(this.pictureBox1);
+            this.pnlWaiting.Controls.Add(this.pbTrainingProgress);
             this.pnlWaiting.Controls.Add(this.label1);
-            this.pnlWaiting.Location = new System.Drawing.Point(897, 129);
+            this.pnlWaiting.Location = new System.Drawing.Point(311, 12);
             this.pnlWaiting.Name = "pnlWaiting";
-            this.pnlWaiting.Size = new System.Drawing.Size(209, 94);
+            this.pnlWaiting.Size = new System.Drawing.Size(164, 115);
             this.pnlWaiting.TabIndex = 8;
             // 
             // pictureBox1
@@ -652,10 +591,18 @@ namespace ML
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(0, 15);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(209, 79);
+            this.pictureBox1.Size = new System.Drawing.Size(164, 77);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            // 
+            // pbTrainingProgress
+            // 
+            this.pbTrainingProgress.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pbTrainingProgress.Location = new System.Drawing.Point(0, 92);
+            this.pbTrainingProgress.Name = "pbTrainingProgress";
+            this.pbTrainingProgress.Size = new System.Drawing.Size(164, 23);
+            this.pbTrainingProgress.TabIndex = 2;
             // 
             // label1
             // 
@@ -672,6 +619,11 @@ namespace ML
             this.saveFileDialog1.DefaultExt = "onnx";
             this.saveFileDialog1.FileName = "onnx_model";
             // 
+            // tmr1sec
+            // 
+            this.tmr1sec.Interval = 1000;
+            this.tmr1sec.Tick += new System.EventHandler(this.tmr1sec_Tick);
+            // 
             // Wizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -681,7 +633,6 @@ namespace ML
             this.Controls.Add(this.pnlResault);
             this.Controls.Add(this.pnlConfig);
             this.Controls.Add(this.pnlSelectOutput);
-            this.Controls.Add(this.pnlTest);
             this.Controls.Add(this.pnlSelectData);
             this.Controls.Add(this.pnlSelectMLtype);
             this.Controls.Add(this.pnlNavigation);
@@ -697,7 +648,6 @@ namespace ML
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.pnlNavigation.ResumeLayout(false);
-            this.pnlTest.ResumeLayout(false);
             this.pnlSelectOutput.ResumeLayout(false);
             this.pnlSelectOutput.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataPreview)).EndInit();
@@ -713,12 +663,7 @@ namespace ML
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).EndInit();
             this.pnlResault.ResumeLayout(false);
             this.pnlResault.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvResultMain)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvResultSide)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.pnlWaiting.ResumeLayout(false);
             this.pnlWaiting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -742,8 +687,6 @@ namespace ML
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnFinish;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Panel pnlTest;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel pnlSelectOutput;
         private System.Windows.Forms.Label lblHeaderSelectOutput;
         private System.Windows.Forms.Panel pnlConfig;
@@ -771,14 +714,14 @@ namespace ML
         private System.Windows.Forms.ListBox lbDataKinds;
         private System.Windows.Forms.CheckBox cbIsLabel;
         private System.Windows.Forms.Button btnTrainModel;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.DataGridView dgvResultMain;
-        private System.Windows.Forms.DataGridView dgvResultSide;
         private System.Windows.Forms.Panel pnlWaiting;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSaveModel;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ProgressBar pbTrainingProgress;
+        private System.Windows.Forms.Timer tmr1sec;
+        private System.Windows.Forms.DataGridView dgvResults;
     }
 }
 

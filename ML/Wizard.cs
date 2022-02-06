@@ -21,6 +21,7 @@ namespace ML
         int CurrentScene;
         bool disableUpdates;
         AutoMLHandler mlHolder = new AutoMLHandler();
+        int bestIndex = -1;
         public Wizard()
         {
             InitializeComponent();
@@ -36,6 +37,12 @@ namespace ML
             lbDataKinds.Items.Add("String");
             lbDataKinds.Items.Add("Boolean");
             mlHolder.TrainingComplete += btnNext_Click;
+            mlHolder.AutoMLLog += MlHolder_AutoMLLog;
+        }
+
+        private void MlHolder_AutoMLLog(object sender, LoggingEventArgs e)
+        {
+
         }
 
         private void SetScene(int Scene)
@@ -62,10 +69,41 @@ namespace ML
             {
                 ShowResults();
             }
+            tmr1sec.Enabled = pnlWaiting.Visible;
+            if (pnlWaiting.Visible)
+            {
+                pbTrainingProgress.Value = 0;
+                pbTrainingProgress.Maximum = (int)numTimeout.Value;
+            }
         }
         private void ShowResults()
         {
-            dgvResultMain.DataSource = mlHolder.ShallowExperimentResults;
+            ShallowExperimentResult[] results = mlHolder.ShallowExperimentResults;
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Index",typeof(int));
+            dt.Columns.Add("Algorithm",typeof(string));
+            foreach (ShallowExperimentScore item in results[0].Scores)
+            {
+                dt.Columns.Add(item.Name, typeof(double));
+            }
+            for (int i = 0; i < results.Length; i++)
+            {
+                if (results[i].IsBest)
+                {
+                    bestIndex = results[i].Index;
+                }
+                object[] row = new object[dt.Columns.Count];
+                row[0] = results[i].Index;
+                row[1] = results[i].Algorithm;
+                for (int j = 0; j < results[0].Scores.Length; j++)
+                {
+                    row[j+2] = results[i].Scores[j].Score;
+                }
+                dt.Rows.Add(row);
+            }
+            dgvResults.DataSource = dt;
+
+            dgvResults_Sorted(this, new EventArgs());
         }
         private void LoadDataPreview()
         {
@@ -132,11 +170,6 @@ namespace ML
         {
             SetScene(CurrentScene - 1);
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnSelectFolder_Click(object sender, EventArgs e)
         {
             DialogResult result = folderBrowserDialog1.ShowDialog();
@@ -211,27 +244,46 @@ namespace ML
             mlHolder.TrainModel(excludedAgorithmsList.ToArray(), (uint)numTimeout.Value, folderBrowserDialog1.SelectedPath);
         }
 
-        private void dgvResultMain_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgvResultMain.SelectedRows.Count == 0)
-            {
-                return;
-            }
-            int selectedIndex = dgvResultMain.SelectedRows[0].Index;
-            dgvResultSide.DataSource = mlHolder.ShallowExperimentResults[selectedIndex].Scores;
-        }
-
         private void btnSaveModel_Click(object sender, EventArgs e)
         {
-            if (dgvResultMain.SelectedRows.Count == 0)
+            if (dgvResults.SelectedRows.Count == 0)
             {
                 return;
             }
             DialogResult dialogResult = saveFileDialog1.ShowDialog();
             if (dialogResult == DialogResult.OK)
             {
-                int selectedIndex = dgvResultMain.SelectedRows[0].Index;
-                mlHolder.SaveModel(mlHolder.ShallowExperimentResults[selectedIndex],saveFileDialog1.FileName);
+                int selectedIndex = Convert.ToInt32(dgvResults.SelectedRows[0].Cells[0].Value);
+                foreach (var item in mlHolder.ShallowExperimentResults)
+                {
+                    if (item.Index == selectedIndex)
+                    {
+                        mlHolder.SaveModel(item, saveFileDialog1.FileName);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void tmr1sec_Tick(object sender, EventArgs e)
+        {
+            if (pbTrainingProgress.Value < pbTrainingProgress.Maximum)
+            {
+                pbTrainingProgress.Value += 1;
+            }
+        }
+
+        private void dgvResults_Sorted(object sender, EventArgs e)
+        {
+            if (bestIndex >= 0)
+            {
+                for (int i = 0; i < dgvResults.Rows.Count; i++)
+                {
+                    if (bestIndex == Convert.ToInt32(dgvResults[0,i].Value))
+                    {
+                        dgvResults.Rows[i].DefaultCellStyle.BackColor = Color.Aqua;
+                    }
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ namespace ML
         public int Index { get; set; }
         public ITransformer Model { internal get; set; }
         public string Algorithm { get; set; }
+        public bool IsBest { get; set; }
         private List<ShallowExperimentScore> scoreList;
 
         public ShallowExperimentScore[] Scores
