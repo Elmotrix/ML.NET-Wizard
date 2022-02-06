@@ -65,6 +65,14 @@ namespace ML
         public DataTable LoadDataSchema()
         {
             DataTable dt = new DataTable();
+            if (FilePath == "")
+            {
+                return dt;
+            }
+            if (!File.Exists(FilePath))
+            {
+                return dt;
+            }
             using (StreamReader sr = new StreamReader(FilePath))
             {
                 string[] headers = null;
