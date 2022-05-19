@@ -22,15 +22,27 @@ namespace ML
         bool disableUpdates;
         AutoMLHandler mlHolder = new AutoMLHandler();
         int bestIndex = -1;
+        int PredictPanelStartIndex;
         public Wizard()
         {
             InitializeComponent();
+            //scenePanels.Add(pnlWelcome);
+            pnlWelcome.Visible = false;
             scenePanels.Add(pnlSelectData);
             scenePanels.Add(pnlSelectOutput);
             scenePanels.Add(pnlSelectMLtype);
             scenePanels.Add(pnlConfig);
             scenePanels.Add(pnlWaiting);
             scenePanels.Add(pnlResault);
+            PredictPanelStartIndex = scenePanels.Count;
+            scenePanels.Add(pnlSelectData);
+            scenePanels.Add(pnlResault);
+
+            foreach (Panel item in scenePanels)
+            {
+                item.Visible = false;
+                item.Dock = DockStyle.Fill;
+            }
 
             SetScene(0);
             lbDataKinds.Items.Add("Single");
@@ -38,6 +50,7 @@ namespace ML
             lbDataKinds.Items.Add("Boolean");
             mlHolder.TrainingComplete += btnNext_Click;
             mlHolder.AutoMLLog += MlHolder_AutoMLLog;
+            pnlMultiFile.Visible = false;
         }
 
         private void MlHolder_AutoMLLog(object sender, LoggingEventArgs e)
@@ -47,34 +60,43 @@ namespace ML
 
         private void SetScene(int Scene)
         {
-            foreach (Panel item in scenePanels)
-            {
-                item.Visible = false;
-            }
+            scenePanels[CurrentScene].Visible = false;
             scenePanels[Scene].Visible = true;
-            scenePanels[Scene].Dock = DockStyle.Fill;
             CurrentScene = Scene;
-            btnPrev.Enabled = (Scene != 0);
-            btnTrainModel.Visible = pnlConfig.Visible;
-            btnFinish.Visible = pnlResault.Visible;
-            btnSaveModel.Visible = pnlResault.Visible;
-            btnExportResults.Visible = pnlResault.Visible;
-            btnPrev.Visible = !pnlResault.Visible;
-            btnNext.Visible = !(pnlResault.Visible || pnlConfig.Visible);
-            pnlNavigation.Visible = !pnlWaiting.Visible;
-            tmr1sec.Enabled = pnlWaiting.Visible;
-            if (pnlWaiting.Visible)
+            btnPrev.Enabled = !(Scene == 0 || Scene == PredictPanelStartIndex);
+            btnTrainModel.Visible = scenePanels[Scene] == pnlConfig;
+            btnFinish.Visible = scenePanels[Scene] == pnlResault;
+            btnSaveModel.Visible = scenePanels[Scene] == pnlResault;
+            btnExportResults.Visible = scenePanels[Scene] == pnlResault;
+            btnPrev.Visible = !(scenePanels[Scene] == pnlResault);
+            btnNext.Visible = !(scenePanels[Scene] == pnlResault || scenePanels[Scene] == pnlConfig);
+            btnUseModel.Visible = false; // scenePanels[Scene] == pnlResault;
+            btnUseModel.BringToFront();
+            pnlNavigation.Visible = !(scenePanels[Scene] == pnlWaiting || scenePanels[Scene] == pnlWelcome);
+            tmr1sec.Enabled = scenePanels[Scene] == pnlWaiting;
+            if (scenePanels[Scene] == pnlWaiting)
             {
                 pbTrainingProgress.Value = 0;
                 pbTrainingProgress.Maximum = (int)numTimeout.Value+5;
             }
-            if (pnlSelectOutput.Visible)
+
+            if (Scene >= PredictPanelStartIndex)
             {
-                LoadDataPreview();
+                if (scenePanels[Scene] == pnlResault)
+                {
+                    LoadDataPreview();
+                }
             }
-            if (pnlResault.Visible)
+            else
             {
-                ShowResults();
+                if (scenePanels[Scene] == pnlSelectOutput)
+                {
+                    LoadDataPreview();
+                }
+                if (scenePanels[Scene] == pnlResault)
+                {
+                    ShowResults();
+                }
             }
         }
         private void ShowResults()
@@ -111,10 +133,19 @@ namespace ML
         }
         private void LoadDataPreview()
         {
+            string[] Files = new string[lbFiles.Items.Count];
+            for (int i = 0; i < lbFiles.Items.Count; i++)
+            {
+                Files[i] = lbFiles.Items[i].ToString();
+            }
+            if (Files.Length == 0)
+            {
+                Files = new string[] { tbxFileName.Text };
+            }
             dgvDataPreview.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect;
             if (tabcrDataSources.SelectedTab == tabDataFromFile)
             {
-                dgvDataPreview.DataSource = mlHolder.LoadDataSchemaFromFile(tbxFileName.Text, tbxSeparator.Text[0], cbHasHeader.Checked);
+                dgvDataPreview.DataSource = mlHolder.LoadDataSchemaFromFile(Files, tbxSeparator.Text[0], cbHasHeader.Checked);
             }
             else if (tabcrDataSources.SelectedTab == tabDataFromFile)
             {
@@ -202,10 +233,22 @@ namespace ML
 
         private void btnSelectFile_Click(object sender, EventArgs e)
         {
+            openFileDialog1.Multiselect = true;
+            openFileDialog1.Filter = "";
             DialogResult result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                tbxFileName.Text = openFileDialog1.FileName;
+                lbFiles.Items.Clear();
+                lbFiles.Items.AddRange(openFileDialog1.FileNames);
+                if (openFileDialog1.FileNames.Length == 1)
+                {
+                    tbxFileName.Text = openFileDialog1.FileName;
+                }
+                else if (openFileDialog1.FileNames.Length > 1)
+                {
+                    tbxFileName.Text = openFileDialog1.FileNames.ToString();
+                    pnlMultiFile.Visible = true;
+                }
             }
         }
 
@@ -351,6 +394,116 @@ namespace ML
                     file.WriteLine(thisLine.TrimEnd(sep));
                 }
             }
+        }
+
+        private void btnMultiFileUp_Click(object sender, EventArgs e)
+        {
+            OrderChange(-1);
+        }
+
+        private void btnMultiFileDown_Click(object sender, EventArgs e)
+        {
+            OrderChange(1);
+        }
+
+        private void OrderChange(int Shift)
+        {
+            int[] selection = new int[lbFiles.SelectedItems.Count];
+            if (selection.Length == 0)
+            {
+                return;
+            }
+            for (int i = 0; i < selection.Length; i++)
+            {
+                selection[i] = lbFiles.Items.IndexOf(lbFiles.SelectedItems[i]);
+            }
+            string[] newArray = new string[lbFiles.Items.Count];
+            foreach (int item in selection)
+            {
+                if (item + Shift >= 0 && item + Shift < lbFiles.Items.Count)
+                {
+                    newArray[item+Shift] = lbFiles.Items[item].ToString();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            int jStart = 0;
+            for (int i = 0; i < newArray.Length; i++)
+            {
+                if (newArray[i] == null)
+                {
+                    for (int j = jStart; j < lbFiles.Items.Count; j++)
+                    {
+                        if (!selection.Contains(j))
+                        {
+                            jStart = j+1;
+                            newArray[i] = lbFiles.Items[j].ToString();
+                            break;
+                        }
+                    }
+                }
+            }
+            lbFiles.Items.Clear();
+            lbFiles.Items.AddRange(newArray);
+            foreach (int item in selection)
+            {
+                lbFiles.SetSelected(item + Shift, true);
+            }
+        }
+
+        private void btnAscending_Click(object sender, EventArgs e)
+        {
+            lbFiles.Sorted = true;
+            lbFiles.Sorted = false;
+        }
+
+        private void btnDecending_Click(object sender, EventArgs e)
+        {
+            lbFiles.Sorted = true;
+            lbFiles.Sorted = false;
+            for (int i = 0; i < lbFiles.Items.Count; i++)
+            {
+                lbFiles.Items[i] = lbFiles.Items.Count - i + lbFiles.Items[i].ToString();
+            }
+            lbFiles.Sorted = true;
+            lbFiles.Sorted = false;
+            for (int i = 0; i < lbFiles.Items.Count; i++)
+            {
+                lbFiles.Items[i] = lbFiles.Items[i].ToString().Substring((lbFiles.Items.Count - i).ToString().Length);
+            }
+        }
+
+        private void pnlWelcome_SizeChanged(object sender, EventArgs e)
+        {
+            pnlWelcome.Padding = new Padding(0, pnlWelcome.Height / 2 - btnStartModelTrainer.Height, 0, 0);
+        }
+
+        private void btnStartModelTrainer_Click(object sender, EventArgs e)
+        {
+            SetScene(CurrentScene + 1);
+        }
+
+        private void btnStartPredicter_Click(object sender, EventArgs e)
+        {
+
+            openFileDialog1.Multiselect = false;
+            openFileDialog1.Filter = "Model|*.onnx;*.zip";
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                try
+                {
+                    mlHolder.LoadModel(openFileDialog1.FileName);
+                }
+                catch (Exception Error)
+                {
+                    MessageBox.Show(Error.Message, "Error", MessageBoxButtons.OK);
+                    return;
+                }
+            }
+            SetScene(PredictPanelStartIndex);
         }
     }
 }

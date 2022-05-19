@@ -41,6 +41,13 @@ namespace ML
             this.pnlSelectData = new System.Windows.Forms.Panel();
             this.tabcrDataSources = new System.Windows.Forms.TabControl();
             this.tabDataFromFile = new System.Windows.Forms.TabPage();
+            this.pnlMultiFile = new System.Windows.Forms.Panel();
+            this.lbFiles = new System.Windows.Forms.ListBox();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.btnDecending = new System.Windows.Forms.Button();
+            this.btnAscending = new System.Windows.Forms.Button();
+            this.btnMultiFileDown = new System.Windows.Forms.Button();
+            this.btnMultiFileUp = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.tbxSeparator = new System.Windows.Forms.TextBox();
             this.lblSeparator = new System.Windows.Forms.Label();
@@ -56,6 +63,7 @@ namespace ML
             this.txtConnString = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.pnlNavigation = new System.Windows.Forms.Panel();
+            this.btnUseModel = new System.Windows.Forms.Button();
             this.btnExportResults = new System.Windows.Forms.Button();
             this.btnSaveModel = new System.Windows.Forms.Button();
             this.btnTrainModel = new System.Windows.Forms.Button();
@@ -89,10 +97,15 @@ namespace ML
             this.label1 = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tmr1sec = new System.Windows.Forms.Timer(this.components);
+            this.pnlWelcome = new System.Windows.Forms.Panel();
+            this.btnStartPredicter = new System.Windows.Forms.Button();
+            this.btnStartModelTrainer = new System.Windows.Forms.Button();
             this.pnlSelectMLtype.SuspendLayout();
             this.pnlSelectData.SuspendLayout();
             this.tabcrDataSources.SuspendLayout();
             this.tabDataFromFile.SuspendLayout();
+            this.pnlMultiFile.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabDataFromSQL.SuspendLayout();
@@ -111,6 +124,7 @@ namespace ML
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.pnlWaiting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pnlWelcome.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlSelectMLtype
@@ -200,10 +214,10 @@ namespace ML
             // pnlSelectData
             // 
             this.pnlSelectData.Controls.Add(this.tabcrDataSources);
-            this.pnlSelectData.Location = new System.Drawing.Point(32, 153);
+            this.pnlSelectData.Location = new System.Drawing.Point(946, 136);
             this.pnlSelectData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pnlSelectData.Name = "pnlSelectData";
-            this.pnlSelectData.Size = new System.Drawing.Size(770, 337);
+            this.pnlSelectData.Size = new System.Drawing.Size(126, 92);
             this.pnlSelectData.TabIndex = 2;
             // 
             // tabcrDataSources
@@ -214,20 +228,98 @@ namespace ML
             this.tabcrDataSources.Location = new System.Drawing.Point(0, 0);
             this.tabcrDataSources.Name = "tabcrDataSources";
             this.tabcrDataSources.SelectedIndex = 0;
-            this.tabcrDataSources.Size = new System.Drawing.Size(770, 337);
+            this.tabcrDataSources.Size = new System.Drawing.Size(126, 92);
             this.tabcrDataSources.TabIndex = 9;
             // 
             // tabDataFromFile
             // 
+            this.tabDataFromFile.Controls.Add(this.pnlMultiFile);
             this.tabDataFromFile.Controls.Add(this.panel4);
             this.tabDataFromFile.Controls.Add(this.panel3);
             this.tabDataFromFile.Location = new System.Drawing.Point(4, 24);
             this.tabDataFromFile.Name = "tabDataFromFile";
             this.tabDataFromFile.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDataFromFile.Size = new System.Drawing.Size(762, 309);
+            this.tabDataFromFile.Size = new System.Drawing.Size(118, 64);
             this.tabDataFromFile.TabIndex = 0;
             this.tabDataFromFile.Text = "Data from file";
             this.tabDataFromFile.UseVisualStyleBackColor = true;
+            // 
+            // pnlMultiFile
+            // 
+            this.pnlMultiFile.Controls.Add(this.lbFiles);
+            this.pnlMultiFile.Controls.Add(this.panel6);
+            this.pnlMultiFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMultiFile.Location = new System.Drawing.Point(3, 49);
+            this.pnlMultiFile.Name = "pnlMultiFile";
+            this.pnlMultiFile.Size = new System.Drawing.Size(112, 12);
+            this.pnlMultiFile.TabIndex = 9;
+            // 
+            // lbFiles
+            // 
+            this.lbFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbFiles.FormattingEnabled = true;
+            this.lbFiles.ItemHeight = 15;
+            this.lbFiles.Location = new System.Drawing.Point(27, 0);
+            this.lbFiles.Name = "lbFiles";
+            this.lbFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lbFiles.Size = new System.Drawing.Size(85, 12);
+            this.lbFiles.TabIndex = 0;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.btnDecending);
+            this.panel6.Controls.Add(this.btnAscending);
+            this.panel6.Controls.Add(this.btnMultiFileDown);
+            this.panel6.Controls.Add(this.btnMultiFileUp);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(27, 12);
+            this.panel6.TabIndex = 3;
+            // 
+            // btnDecending
+            // 
+            this.btnDecending.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDecending.Location = new System.Drawing.Point(0, -34);
+            this.btnDecending.Name = "btnDecending";
+            this.btnDecending.Size = new System.Drawing.Size(27, 23);
+            this.btnDecending.TabIndex = 5;
+            this.btnDecending.Text = "D";
+            this.btnDecending.UseVisualStyleBackColor = true;
+            this.btnDecending.Click += new System.EventHandler(this.btnDecending_Click);
+            // 
+            // btnAscending
+            // 
+            this.btnAscending.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnAscending.Location = new System.Drawing.Point(0, 23);
+            this.btnAscending.Name = "btnAscending";
+            this.btnAscending.Size = new System.Drawing.Size(27, 23);
+            this.btnAscending.TabIndex = 4;
+            this.btnAscending.Text = "A";
+            this.btnAscending.UseVisualStyleBackColor = true;
+            this.btnAscending.Click += new System.EventHandler(this.btnAscending_Click);
+            // 
+            // btnMultiFileDown
+            // 
+            this.btnMultiFileDown.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnMultiFileDown.Location = new System.Drawing.Point(0, -11);
+            this.btnMultiFileDown.Name = "btnMultiFileDown";
+            this.btnMultiFileDown.Size = new System.Drawing.Size(27, 23);
+            this.btnMultiFileDown.TabIndex = 2;
+            this.btnMultiFileDown.Text = "↓";
+            this.btnMultiFileDown.UseVisualStyleBackColor = true;
+            this.btnMultiFileDown.Click += new System.EventHandler(this.btnMultiFileDown_Click);
+            // 
+            // btnMultiFileUp
+            // 
+            this.btnMultiFileUp.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnMultiFileUp.Location = new System.Drawing.Point(0, 0);
+            this.btnMultiFileUp.Name = "btnMultiFileUp";
+            this.btnMultiFileUp.Size = new System.Drawing.Size(27, 23);
+            this.btnMultiFileUp.TabIndex = 1;
+            this.btnMultiFileUp.Text = "↑";
+            this.btnMultiFileUp.UseVisualStyleBackColor = true;
+            this.btnMultiFileUp.Click += new System.EventHandler(this.btnMultiFileUp_Click);
             // 
             // panel4
             // 
@@ -237,7 +329,7 @@ namespace ML
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(3, 26);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(756, 23);
+            this.panel4.Size = new System.Drawing.Size(112, 23);
             this.panel4.TabIndex = 8;
             // 
             // tbxSeparator
@@ -278,7 +370,7 @@ namespace ML
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(756, 23);
+            this.panel3.Size = new System.Drawing.Size(112, 23);
             this.panel3.TabIndex = 7;
             // 
             // tbxFileName
@@ -286,7 +378,7 @@ namespace ML
             this.tbxFileName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbxFileName.Location = new System.Drawing.Point(75, 0);
             this.tbxFileName.Name = "tbxFileName";
-            this.tbxFileName.Size = new System.Drawing.Size(681, 23);
+            this.tbxFileName.Size = new System.Drawing.Size(37, 23);
             this.tbxFileName.TabIndex = 1;
             // 
             // btnSelectFile
@@ -307,7 +399,7 @@ namespace ML
             this.tabDataFromSQL.Location = new System.Drawing.Point(4, 24);
             this.tabDataFromSQL.Name = "tabDataFromSQL";
             this.tabDataFromSQL.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDataFromSQL.Size = new System.Drawing.Size(762, 309);
+            this.tabDataFromSQL.Size = new System.Drawing.Size(118, 64);
             this.tabDataFromSQL.TabIndex = 1;
             this.tabDataFromSQL.Text = "Data from database";
             this.tabDataFromSQL.UseVisualStyleBackColor = true;
@@ -319,7 +411,7 @@ namespace ML
             this.pnlQuerryHolder.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlQuerryHolder.Location = new System.Drawing.Point(3, 68);
             this.pnlQuerryHolder.Name = "pnlQuerryHolder";
-            this.pnlQuerryHolder.Size = new System.Drawing.Size(756, 100);
+            this.pnlQuerryHolder.Size = new System.Drawing.Size(112, 100);
             this.pnlQuerryHolder.TabIndex = 1;
             // 
             // txtQuerry
@@ -328,7 +420,7 @@ namespace ML
             this.txtQuerry.Location = new System.Drawing.Point(106, 0);
             this.txtQuerry.Multiline = true;
             this.txtQuerry.Name = "txtQuerry";
-            this.txtQuerry.Size = new System.Drawing.Size(650, 100);
+            this.txtQuerry.Size = new System.Drawing.Size(6, 100);
             this.txtQuerry.TabIndex = 1;
             this.txtQuerry.Text = "SELECT * FROM table";
             // 
@@ -349,7 +441,7 @@ namespace ML
             this.pnlConStringHolder.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlConStringHolder.Location = new System.Drawing.Point(3, 3);
             this.pnlConStringHolder.Name = "pnlConStringHolder";
-            this.pnlConStringHolder.Size = new System.Drawing.Size(756, 65);
+            this.pnlConStringHolder.Size = new System.Drawing.Size(112, 65);
             this.pnlConStringHolder.TabIndex = 0;
             // 
             // txtConnString
@@ -358,7 +450,7 @@ namespace ML
             this.txtConnString.Location = new System.Drawing.Point(106, 0);
             this.txtConnString.Multiline = true;
             this.txtConnString.Name = "txtConnString";
-            this.txtConnString.Size = new System.Drawing.Size(650, 65);
+            this.txtConnString.Size = new System.Drawing.Size(6, 65);
             this.txtConnString.TabIndex = 1;
             this.txtConnString.Text = "Data Source=ServerName;\r\nInitial Catalog=DataBaseName;\r\nIntegrated Security=SSPI;" +
     "";
@@ -375,6 +467,7 @@ namespace ML
             // 
             // pnlNavigation
             // 
+            this.pnlNavigation.Controls.Add(this.btnUseModel);
             this.pnlNavigation.Controls.Add(this.btnExportResults);
             this.pnlNavigation.Controls.Add(this.btnSaveModel);
             this.pnlNavigation.Controls.Add(this.btnTrainModel);
@@ -387,6 +480,19 @@ namespace ML
             this.pnlNavigation.Name = "pnlNavigation";
             this.pnlNavigation.Size = new System.Drawing.Size(1118, 34);
             this.pnlNavigation.TabIndex = 3;
+            this.pnlNavigation.Visible = false;
+            // 
+            // btnUseModel
+            // 
+            this.btnUseModel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnUseModel.Location = new System.Drawing.Point(486, 0);
+            this.btnUseModel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnUseModel.Name = "btnUseModel";
+            this.btnUseModel.Size = new System.Drawing.Size(158, 34);
+            this.btnUseModel.TabIndex = 6;
+            this.btnUseModel.Text = "Use Model";
+            this.btnUseModel.UseVisualStyleBackColor = true;
+            this.btnUseModel.Visible = false;
             // 
             // btnExportResults
             // 
@@ -735,11 +841,46 @@ namespace ML
             this.tmr1sec.Interval = 1000;
             this.tmr1sec.Tick += new System.EventHandler(this.tmr1sec_Tick);
             // 
+            // pnlWelcome
+            // 
+            this.pnlWelcome.Controls.Add(this.btnStartPredicter);
+            this.pnlWelcome.Controls.Add(this.btnStartModelTrainer);
+            this.pnlWelcome.Location = new System.Drawing.Point(969, 251);
+            this.pnlWelcome.Name = "pnlWelcome";
+            this.pnlWelcome.Size = new System.Drawing.Size(71, 63);
+            this.pnlWelcome.TabIndex = 9;
+            this.pnlWelcome.SizeChanged += new System.EventHandler(this.pnlWelcome_SizeChanged);
+            // 
+            // btnStartPredicter
+            // 
+            this.btnStartPredicter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnStartPredicter.Location = new System.Drawing.Point(0, 46);
+            this.btnStartPredicter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnStartPredicter.Name = "btnStartPredicter";
+            this.btnStartPredicter.Size = new System.Drawing.Size(71, 46);
+            this.btnStartPredicter.TabIndex = 2;
+            this.btnStartPredicter.Text = "Use model";
+            this.btnStartPredicter.UseVisualStyleBackColor = true;
+            this.btnStartPredicter.Click += new System.EventHandler(this.btnStartPredicter_Click);
+            // 
+            // btnStartModelTrainer
+            // 
+            this.btnStartModelTrainer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnStartModelTrainer.Location = new System.Drawing.Point(0, 0);
+            this.btnStartModelTrainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnStartModelTrainer.Name = "btnStartModelTrainer";
+            this.btnStartModelTrainer.Size = new System.Drawing.Size(71, 46);
+            this.btnStartModelTrainer.TabIndex = 1;
+            this.btnStartModelTrainer.Text = "Create models";
+            this.btnStartModelTrainer.UseVisualStyleBackColor = true;
+            this.btnStartModelTrainer.Click += new System.EventHandler(this.btnStartModelTrainer_Click);
+            // 
             // Wizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1118, 550);
+            this.Controls.Add(this.pnlWelcome);
             this.Controls.Add(this.pnlWaiting);
             this.Controls.Add(this.pnlResault);
             this.Controls.Add(this.pnlConfig);
@@ -755,6 +896,8 @@ namespace ML
             this.pnlSelectData.ResumeLayout(false);
             this.tabcrDataSources.ResumeLayout(false);
             this.tabDataFromFile.ResumeLayout(false);
+            this.pnlMultiFile.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -783,6 +926,7 @@ namespace ML
             this.pnlWaiting.ResumeLayout(false);
             this.pnlWaiting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.pnlWelcome.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -847,6 +991,17 @@ namespace ML
         private System.Windows.Forms.TextBox txtConnString;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnExportResults;
+        private System.Windows.Forms.Panel pnlMultiFile;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Button btnMultiFileDown;
+        private System.Windows.Forms.Button btnMultiFileUp;
+        private System.Windows.Forms.ListBox lbFiles;
+        private System.Windows.Forms.Button btnAscending;
+        private System.Windows.Forms.Button btnDecending;
+        private System.Windows.Forms.Button btnUseModel;
+        private System.Windows.Forms.Panel pnlWelcome;
+        private System.Windows.Forms.Button btnStartPredicter;
+        private System.Windows.Forms.Button btnStartModelTrainer;
     }
 }
 

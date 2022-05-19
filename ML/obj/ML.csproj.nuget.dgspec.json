@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Kim\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj": {}
+    "C:\\Users\\kimho\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Kim\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj": {
+    "C:\\Users\\kimho\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Kim\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj",
+        "projectUniqueName": "C:\\Users\\kimho\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj",
         "projectName": "ML",
-        "projectPath": "C:\\Users\\Kim\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj",
-        "packagesPath": "C:\\Users\\Kim\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Kim\\source\\repos\\ML.NET-Wizard\\ML\\obj\\",
+        "projectPath": "C:\\Users\\kimho\\source\\repos\\ML.NET-Wizard\\ML\\ML.csproj",
+        "packagesPath": "C:\\Users\\kimho\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\kimho\\source\\repos\\ML.NET-Wizard\\ML\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Kim\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\kimho\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -46,15 +42,19 @@
           "dependencies": {
             "Microsoft.ML": {
               "target": "Package",
-              "version": "[1.7.0, )"
+              "version": "[1.7.1, )"
             },
             "Microsoft.ML.AutoML": {
               "target": "Package",
-              "version": "[0.19.0, )"
+              "version": "[0.19.1, )"
             },
             "Microsoft.ML.DataView": {
               "target": "Package",
-              "version": "[1.7.0, )"
+              "version": "[1.7.1, )"
+            },
+            "Microsoft.ML.OnnxTransformer": {
+              "target": "Package",
+              "version": "[1.7.1, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",
@@ -79,7 +79,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

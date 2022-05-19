@@ -8,23 +8,21 @@
     ".NETCoreApp,Version=v5.0": {
       "ML/1.0.0": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0",
-          "Microsoft.ML.AutoML": "0.19.0",
-          "Microsoft.ML.DataView": "1.7.0",
+          "Microsoft.ML": "1.7.1",
+          "Microsoft.ML.AutoML": "0.19.1",
+          "Microsoft.ML.DataView": "1.7.1",
+          "Microsoft.ML.OnnxTransformer": "1.7.1",
           "System.Data.SqlClient": "4.8.3"
         },
         "runtime": {
           "ML.dll": {}
         }
       },
-      "Google.Protobuf/3.11.4": {
-        "dependencies": {
-          "System.Memory": "4.5.3"
-        },
+      "Google.Protobuf/3.19.4": {
         "runtime": {
-          "lib/netstandard2.0/Google.Protobuf.dll": {
-            "assemblyVersion": "3.11.4.0",
-            "fileVersion": "3.11.4.0"
+          "lib/net5.0/Google.Protobuf.dll": {
+            "assemblyVersion": "3.19.4.0",
+            "fileVersion": "3.19.4.0"
           }
         }
       },
@@ -72,10 +70,10 @@
           "System.Threading": "4.3.0"
         }
       },
-      "Microsoft.ML/1.7.0": {
+      "Microsoft.ML/1.7.1": {
         "dependencies": {
-          "Microsoft.ML.CpuMath": "1.7.0",
-          "Microsoft.ML.DataView": "1.7.0",
+          "Microsoft.ML.CpuMath": "1.7.1",
+          "Microsoft.ML.DataView": "1.7.1",
           "Newtonsoft.Json": "10.0.3",
           "System.CodeDom": "4.4.0",
           "System.Collections.Immutable": "1.5.0",
@@ -86,31 +84,31 @@
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.Core.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           },
           "lib/netstandard2.0/Microsoft.ML.Data.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           },
           "lib/netstandard2.0/Microsoft.ML.KMeansClustering.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           },
           "lib/netstandard2.0/Microsoft.ML.PCA.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           },
           "lib/netstandard2.0/Microsoft.ML.StandardTrainers.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           },
           "lib/netstandard2.0/Microsoft.ML.Transforms.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           },
           "lib/netstandard2.0/Microsoft.ML.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         },
         "runtimeTargets": {
@@ -142,41 +140,41 @@
           "runtimes/win-x64/native/LdaNative.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           },
           "runtimes/win-x86/native/LdaNative.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           }
         }
       },
-      "Microsoft.ML.AutoML/0.19.0": {
+      "Microsoft.ML.AutoML/0.19.1": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0",
-          "Microsoft.ML.CpuMath": "1.7.0",
-          "Microsoft.ML.ImageAnalytics": "1.7.0",
-          "Microsoft.ML.LightGbm": "1.7.0",
-          "Microsoft.ML.Mkl.Components": "1.7.0",
-          "Microsoft.ML.Recommender": "0.19.0",
-          "Microsoft.ML.Vision": "1.7.0"
+          "Microsoft.ML": "1.7.1",
+          "Microsoft.ML.CpuMath": "1.7.1",
+          "Microsoft.ML.ImageAnalytics": "1.7.1",
+          "Microsoft.ML.LightGbm": "1.7.1",
+          "Microsoft.ML.Mkl.Components": "1.7.1",
+          "Microsoft.ML.Recommender": "0.19.1",
+          "Microsoft.ML.Vision": "1.7.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.AutoML.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           }
         }
       },
-      "Microsoft.ML.CpuMath/1.7.0": {
+      "Microsoft.ML.CpuMath/1.7.1": {
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.ML.CpuMath.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         }
       },
-      "Microsoft.ML.DataView/1.7.0": {
+      "Microsoft.ML.DataView/1.7.1": {
         "dependencies": {
           "System.Collections.Immutable": "1.5.0",
           "System.Memory": "4.5.3"
@@ -184,18 +182,18 @@
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.DataView.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         }
       },
-      "Microsoft.ML.FastTree/1.7.0": {
+      "Microsoft.ML.FastTree/1.7.1": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0"
+          "Microsoft.ML": "1.7.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.FastTree.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         },
         "runtimeTargets": {
@@ -212,50 +210,50 @@
           "runtimes/win-x64/native/FastTreeNative.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           },
           "runtimes/win-x86/native/FastTreeNative.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           }
         }
       },
-      "Microsoft.ML.ImageAnalytics/1.7.0": {
+      "Microsoft.ML.ImageAnalytics/1.7.1": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0",
+          "Microsoft.ML": "1.7.1",
           "System.Buffers": "4.5.0",
           "System.Drawing.Common": "4.5.0"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.ImageAnalytics.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         }
       },
-      "Microsoft.ML.LightGbm/1.7.0": {
+      "Microsoft.ML.LightGbm/1.7.1": {
         "dependencies": {
           "LightGBM": "2.3.1",
-          "Microsoft.ML": "1.7.0",
-          "Microsoft.ML.FastTree": "1.7.0"
+          "Microsoft.ML": "1.7.1",
+          "Microsoft.ML.FastTree": "1.7.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.LightGbm.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         }
       },
-      "Microsoft.ML.Mkl.Components/1.7.0": {
+      "Microsoft.ML.Mkl.Components/1.7.1": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0",
-          "Microsoft.ML.Mkl.Redist": "1.7.0"
+          "Microsoft.ML": "1.7.1",
+          "Microsoft.ML.Mkl.Redist": "1.7.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.Mkl.Components.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         },
         "runtimeTargets": {
@@ -272,20 +270,20 @@
           "runtimes/win-x64/native/SymSgdNative.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           },
           "runtimes/win-x86/native/SymSgdNative.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           }
         }
       },
-      "Microsoft.ML.Mkl.Redist/1.7.0": {
+      "Microsoft.ML.Mkl.Redist/1.7.1": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.Mkl.Redist.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         },
         "runtimeTargets": {
@@ -317,7 +315,7 @@
           "runtimes/win-x64/native/MklProxyNative.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           },
           "runtimes/win-x64/native/libiomp5md.dll": {
             "rid": "win-x64",
@@ -332,7 +330,7 @@
           "runtimes/win-x86/native/MklProxyNative.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           },
           "runtimes/win-x86/native/libiomp5md.dll": {
             "rid": "win-x86",
@@ -341,14 +339,39 @@
           }
         }
       },
-      "Microsoft.ML.Recommender/0.19.0": {
+      "Microsoft.ML.OnnxRuntime.Managed/1.6.0": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0"
+          "NETStandard.Library": "1.6.1",
+          "System.Memory": "4.5.3"
+        },
+        "runtime": {
+          "lib/netstandard1.1/Microsoft.ML.OnnxRuntime.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Microsoft.ML.OnnxTransformer/1.7.1": {
+        "dependencies": {
+          "Google.Protobuf": "3.19.4",
+          "Microsoft.ML": "1.7.1",
+          "Microsoft.ML.OnnxRuntime.Managed": "1.6.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.ML.OnnxTransformer.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.700.122.15804"
+          }
+        }
+      },
+      "Microsoft.ML.Recommender/0.19.1": {
+        "dependencies": {
+          "Microsoft.ML": "1.7.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.Recommender.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           }
         },
         "runtimeTargets": {
@@ -380,18 +403,19 @@
           "runtimes/win-x64/native/MatrixFactorizationNative.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           },
           "runtimes/win-x86/native/MatrixFactorizationNative.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.1900.21.55904"
+            "fileVersion": "0.1900.122.15804"
           }
         }
       },
-      "Microsoft.ML.TensorFlow/1.7.0": {
+      "Microsoft.ML.TensorFlow/1.7.1": {
         "dependencies": {
-          "Microsoft.ML": "1.7.0",
+          "Google.Protobuf": "3.19.4",
+          "Microsoft.ML": "1.7.1",
           "System.IO.FileSystem.AccessControl": "4.5.0",
           "System.Security.Principal.Windows": "4.7.0",
           "TensorFlow.NET": "0.20.1"
@@ -399,18 +423,18 @@
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.TensorFlow.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         }
       },
-      "Microsoft.ML.Vision/1.7.0": {
+      "Microsoft.ML.Vision/1.7.1": {
         "dependencies": {
-          "Microsoft.ML.TensorFlow": "1.7.0"
+          "Microsoft.ML.TensorFlow": "1.7.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.Vision.dll": {
             "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.700.21.55904"
+            "fileVersion": "1.700.122.15804"
           }
         }
       },
@@ -511,7 +535,7 @@
       },
       "Protobuf.Text/0.4.0": {
         "dependencies": {
-          "Google.Protobuf": "3.11.4"
+          "Google.Protobuf": "3.19.4"
         },
         "runtime": {
           "lib/netstandard2.0/Protobuf.Text.dll": {
@@ -1306,7 +1330,7 @@
       },
       "TensorFlow.NET/0.20.1": {
         "dependencies": {
-          "Google.Protobuf": "3.11.4",
+          "Google.Protobuf": "3.19.4",
           "NumSharp.Lite": "0.1.8",
           "Protobuf.Text": "0.4.0"
         },
@@ -1325,12 +1349,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Google.Protobuf/3.11.4": {
+    "Google.Protobuf/3.19.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-dajCxjDCiPyZuqwZCkFJTwhn/0TJ5VesIs4fXvs56ez1VUi68JjhYMMsPjnJ9gcPqJwTMtXMU1WqUdXYiG1x4w==",
-      "path": "google.protobuf/3.11.4",
-      "hashPath": "google.protobuf.3.11.4.nupkg.sha512"
+      "sha512": "sha512-fd07/ykL4O4FhqrZIELm5lmiyOHfdPg9+o+hWr6tcfRdS7tHXnImg/2wtogLzlW2eEmr0J7j6ZrZvaWOLiJbxQ==",
+      "path": "google.protobuf/3.19.4",
+      "hashPath": "google.protobuf.3.19.4.nupkg.sha512"
     },
     "LightGBM/2.3.1": {
       "type": "package",
@@ -1346,89 +1370,103 @@
       "path": "microsoft.csharp/4.3.0",
       "hashPath": "microsoft.csharp.4.3.0.nupkg.sha512"
     },
-    "Microsoft.ML/1.7.0": {
+    "Microsoft.ML/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VWNzTz3Owt7qBxsLD1cxjx3fN7YuyVKu26OIwKIF83r+3Fm8B/OkiXugP8rjIYg0c3+KK8G3ks96eiOfdzT26g==",
-      "path": "microsoft.ml/1.7.0",
-      "hashPath": "microsoft.ml.1.7.0.nupkg.sha512"
+      "sha512": "sha512-t33nUR6A8VwYMInbsEM5eSGJaHWdScikAX7mER0Yh0H4e85W7FRw0KBlCixHHuivSF2y7ez+2IGpfb2PUgVVow==",
+      "path": "microsoft.ml/1.7.1",
+      "hashPath": "microsoft.ml.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.AutoML/0.19.0": {
+    "Microsoft.ML.AutoML/0.19.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-PP9CiteP/fmOwPiduxPJKH5gdEtp5GjYT3vhd6QKhGK7jsumwNNG+lqRaH+HRTIJSMzTcomF3WL6CcNyp7z61w==",
-      "path": "microsoft.ml.automl/0.19.0",
-      "hashPath": "microsoft.ml.automl.0.19.0.nupkg.sha512"
+      "sha512": "sha512-Bbc3s/FLYCpVZXbMWduOD8Q2SEdDN6LLzvefLiGxXEYZAHG+dEzVPwGTx3AejorIHcrzI+O7zytqINswnxHq1A==",
+      "path": "microsoft.ml.automl/0.19.1",
+      "hashPath": "microsoft.ml.automl.0.19.1.nupkg.sha512"
     },
-    "Microsoft.ML.CpuMath/1.7.0": {
+    "Microsoft.ML.CpuMath/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ibot+EJKOG21DE47YQCy8djLpSJ31hgbwkJPkG2a5KSieb2eEGySCzzMLBAcP2jR5vd8+5Gss3FuGYvfY9Bncw==",
-      "path": "microsoft.ml.cpumath/1.7.0",
-      "hashPath": "microsoft.ml.cpumath.1.7.0.nupkg.sha512"
+      "sha512": "sha512-kkUm/o1pBFAtRI+5LRwtJpvXhf8l8YyeQ8OYZNkTGrn5exn5C3YrwrRRX3fDz7yPPKA38XY4EPy2WVltArO0aw==",
+      "path": "microsoft.ml.cpumath/1.7.1",
+      "hashPath": "microsoft.ml.cpumath.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.DataView/1.7.0": {
+    "Microsoft.ML.DataView/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pMfpOsoRcexVnsNqwRqcqRsdfzw2dN3kBu3QzmZ3YqPuiZLLoDHaB3ZYEAvnIUEhpnIe4wVD4UnUWvatzoVWcQ==",
-      "path": "microsoft.ml.dataview/1.7.0",
-      "hashPath": "microsoft.ml.dataview.1.7.0.nupkg.sha512"
+      "sha512": "sha512-j7BwSzNJUjxI8aSkzv4yCi0/kem1mYFVWiuLQcG0vcMEs3BNqvkunt+qdRmUMYuPY7/9AK22a70laAxjcJ2GGA==",
+      "path": "microsoft.ml.dataview/1.7.1",
+      "hashPath": "microsoft.ml.dataview.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.FastTree/1.7.0": {
+    "Microsoft.ML.FastTree/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-n6twixlV7j3j1lK4Mr7s0JrNcSK7/mffGsdh86gcXC+e9T8ewDD4PA1Eh01fc9+mraSSj3gdK861WZYeq17CMw==",
-      "path": "microsoft.ml.fasttree/1.7.0",
-      "hashPath": "microsoft.ml.fasttree.1.7.0.nupkg.sha512"
+      "sha512": "sha512-xg0UW0fq6ZuaxIeAS5osgIX4Nb8xyk6UBD/Ier3mhGRdU5mnhF7Nhv5KHhy2NXRA8o9JzLfl2ocVU9zT6D9EYw==",
+      "path": "microsoft.ml.fasttree/1.7.1",
+      "hashPath": "microsoft.ml.fasttree.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.ImageAnalytics/1.7.0": {
+    "Microsoft.ML.ImageAnalytics/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-PN6XtPWALxx/H7stVFmUSEgVRVpI4ausZJx2rHabgze40FMMYe9/qeua7hoOcqotFgssJLC1WvC8y6R/iV3f+w==",
-      "path": "microsoft.ml.imageanalytics/1.7.0",
-      "hashPath": "microsoft.ml.imageanalytics.1.7.0.nupkg.sha512"
+      "sha512": "sha512-C3C47/E3OM6xsFh4QtgCa6grRXdGTI97bRPqKsuUrouGE6FAurSCUu8KLkf9wtMQZKERUzjeGVs3Tp+78b9IvA==",
+      "path": "microsoft.ml.imageanalytics/1.7.1",
+      "hashPath": "microsoft.ml.imageanalytics.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.LightGbm/1.7.0": {
+    "Microsoft.ML.LightGbm/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-xujVp5ZaQ8lYxCeKzt8vxFXwRvS1S4Q5DM4phtsQ8td2tbx8P9bz3eWF3RgHEZBwQ89bQtOHxcseXd59+nM35Q==",
-      "path": "microsoft.ml.lightgbm/1.7.0",
-      "hashPath": "microsoft.ml.lightgbm.1.7.0.nupkg.sha512"
+      "sha512": "sha512-UkPA6I9iUsuqyNA2SBOeKeEmplQ6amJC0e7BqgEGcSvG/zLq/3nPdVeUd1EWuL6QeCyxp1B/VeemN5Nzc2e89g==",
+      "path": "microsoft.ml.lightgbm/1.7.1",
+      "hashPath": "microsoft.ml.lightgbm.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.Mkl.Components/1.7.0": {
+    "Microsoft.ML.Mkl.Components/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-G7K5hz3IoSKuoZHjeCDJIsc+iunjCuYgXT2bHNKrB+DJqssorU7Q2/v98qdqNqPduQQvG1hTh3v6PKqtdb5sbA==",
-      "path": "microsoft.ml.mkl.components/1.7.0",
-      "hashPath": "microsoft.ml.mkl.components.1.7.0.nupkg.sha512"
+      "sha512": "sha512-IU/LpnhA3UtmzTLcdY17ImGqGnfqS50SNvGrtz3MOkzzUQVPCSVUoNi+cN4GlA63n56LeOG/H8kQc6XG+GTVpg==",
+      "path": "microsoft.ml.mkl.components/1.7.1",
+      "hashPath": "microsoft.ml.mkl.components.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.Mkl.Redist/1.7.0": {
+    "Microsoft.ML.Mkl.Redist/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-S7zcvElpH0p6MGu2Q6LWyFzcqBWG29FJ7cNSgTLDcgMDw0h6jND5lvDeuOXF3QyOtgmZMb35iTHSBo9sCwH03w==",
-      "path": "microsoft.ml.mkl.redist/1.7.0",
-      "hashPath": "microsoft.ml.mkl.redist.1.7.0.nupkg.sha512"
+      "sha512": "sha512-BFR83H/pl5FSQfE2VAuIxMGnGprJ07Pj0g/BQbbieYwQ5leRsbt+mFP/pSJaR6Yt/10ONwBs5gbsUK+ceWSeNA==",
+      "path": "microsoft.ml.mkl.redist/1.7.1",
+      "hashPath": "microsoft.ml.mkl.redist.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.Recommender/0.19.0": {
+    "Microsoft.ML.OnnxRuntime.Managed/1.6.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1X0Al99C32Y1Yb4OZnMjcLYhDOCMLepwTbREID41P+7Eg4z1v2DYzl7Nd2zSDcpgorhXSsPKIKpLVQ1UQos8nA==",
-      "path": "microsoft.ml.recommender/0.19.0",
-      "hashPath": "microsoft.ml.recommender.0.19.0.nupkg.sha512"
+      "sha512": "sha512-v+165tGGYF9/LhgTqEI1VAz380SC+eG/0SsoJCqnPbsr3y1aIjBBmSli+Zqv+6G6k4b5zTQAFzfRPHAzwN/hww==",
+      "path": "microsoft.ml.onnxruntime.managed/1.6.0",
+      "hashPath": "microsoft.ml.onnxruntime.managed.1.6.0.nupkg.sha512"
     },
-    "Microsoft.ML.TensorFlow/1.7.0": {
+    "Microsoft.ML.OnnxTransformer/1.7.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4FxpMjY+lFGFWrHekNSnLJHz6lairkJbM68Ms8OrCHmFoeqHwgMYJPKx1lmcJzY++mf3ikjtT0BdP9GndEMToQ==",
-      "path": "microsoft.ml.tensorflow/1.7.0",
-      "hashPath": "microsoft.ml.tensorflow.1.7.0.nupkg.sha512"
+      "sha512": "sha512-KguJkeuvYsNnoHP/jDXXGjXZmVxpMMd/41ZnnbeStDqQrkHL9FYq40GCcHUDEKlklL36kGPPyZrF9pf7Yv4yEw==",
+      "path": "microsoft.ml.onnxtransformer/1.7.1",
+      "hashPath": "microsoft.ml.onnxtransformer.1.7.1.nupkg.sha512"
     },
-    "Microsoft.ML.Vision/1.7.0": {
+    "Microsoft.ML.Recommender/0.19.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-L41jldSk8P4tmwWkGa4txQb2b1v53If3fXZ0sHSm1lyzG02yHRiH7A4cUTWj5GUTR/Rl0tItSUHQsEOpkQP+rg==",
-      "path": "microsoft.ml.vision/1.7.0",
-      "hashPath": "microsoft.ml.vision.1.7.0.nupkg.sha512"
+      "sha512": "sha512-4OvTIokxdSkUEkCzVUs9EIXrnyq8Wiri7filzl7jd/907ECQbuyxkQn4npd2/UW8o5dw7lMk7RUdUe11BEevxg==",
+      "path": "microsoft.ml.recommender/0.19.1",
+      "hashPath": "microsoft.ml.recommender.0.19.1.nupkg.sha512"
+    },
+    "Microsoft.ML.TensorFlow/1.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-b0wOkjf2kfpLnjHLFfrghyitYERu9Kmd60+PKjLD8lq0Pp7Pg9232h1UPk8HcmbP9QVprg+UXOlGxR9B0O90YQ==",
+      "path": "microsoft.ml.tensorflow/1.7.1",
+      "hashPath": "microsoft.ml.tensorflow.1.7.1.nupkg.sha512"
+    },
+    "Microsoft.ML.Vision/1.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/KtRQn+ZpSMU9w8lwwVm/A0Ls9KzDpdpZtwiSob0GjRKeEY4fJmIxsZlxmNuHnl9ZrfBraL52RJp6UoQqbKR2A==",
+      "path": "microsoft.ml.vision/1.7.1",
+      "hashPath": "microsoft.ml.vision.1.7.1.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/3.1.0": {
       "type": "package",

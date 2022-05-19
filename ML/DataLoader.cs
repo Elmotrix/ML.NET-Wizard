@@ -53,27 +53,34 @@ namespace ML
     }
     class FileDataLoader: BaseDataLoader,iDataLoader
     {
-        public FileDataLoader(string filePath, char separator = ',', bool hasHeader = true)
+        public FileDataLoader(string[] filePath, char separator = ',', bool hasHeader = true)
         {
             FilePath = filePath;
             Separator = separator;
             HasHeader = hasHeader;
         }
-        string FilePath;
+        string[] FilePath;
         char Separator;
         bool HasHeader;
         public DataTable LoadDataSchema()
         {
             DataTable dt = new DataTable();
-            if (FilePath == "")
+            if (FilePath == null)
             {
                 return dt;
             }
-            if (!File.Exists(FilePath))
+            if (FilePath.Length == 0)
             {
                 return dt;
             }
-            using (StreamReader sr = new StreamReader(FilePath))
+            foreach (string item in FilePath)
+            {
+                if (!File.Exists(item))
+                {
+                    return dt;
+                }
+            }
+            using (StreamReader sr = new StreamReader(FilePath[0]))
             {
                 string[] headers = null;
                 if (HasHeader)

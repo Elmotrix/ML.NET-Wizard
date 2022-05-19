@@ -1,6 +1,7 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.AutoML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Transforms.Onnx;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -35,7 +36,7 @@ namespace ML
         {
             AutoMLLog?.Invoke(sender, e);
         }
-        public DataTable LoadDataSchemaFromFile(string filePath,char separator, bool hasHeader)
+        public DataTable LoadDataSchemaFromFile(string[] filePath,char separator, bool hasHeader)
         {
             DataLoader = new FileDataLoader(filePath, separator, hasHeader);
             return DataLoader.LoadDataSchema();
@@ -212,6 +213,28 @@ namespace ML
         {
             using FileStream stream = File.Create(path);
             mlContext.Model.Save(experimentResult.Model, data.Schema, stream);
+        }
+        public void LoadModel(string FilePath)
+        {
+            if (FilePath.ToLower().Contains(".zip"))
+            {
+                DataViewSchema modelSchema;
+                mlContext.Model.Load(FilePath, out modelSchema);
+            }
+            else if (FilePath.ToLower().Contains(".onnx"))
+            {
+                OnnxScoringEstimator estimator = mlContext.Transforms.ApplyOnnxModel(FilePath);
+            }
+        }
+
+        public void Predict(ITransformer Model)
+        {        // Create runtime type from fields and types in a DataViewSchema
+            //var runtimeType = ClassFactory.CreateType(dataViewSchema);
+
+            //dynamic dynamicPredictionEngine;
+            //var genericPredictionMethod = mlContext.Model.GetType().GetMethod("CreatePredictionEngine", new[] { typeof(ITransformer), typeof(DataViewSchema) });
+            //var predictionMethod = genericPredictionMethod.MakeGenericMethod(runtimeType, typeof(PricePrediction));
+            //dynamicPredictionEngine = predictionMethod.Invoke(mlContext.Model, new object[] { model, dataViewSchema });
         }
     }
 }
