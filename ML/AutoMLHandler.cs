@@ -229,12 +229,23 @@ namespace ML
 
         public void Predict(ITransformer Model)
         {        // Create runtime type from fields and types in a DataViewSchema
-            //var runtimeType = ClassFactory.CreateType(dataViewSchema);
+                 //var runtimeType = ClassFactory.CreateType(dataViewSchema);
 
             //dynamic dynamicPredictionEngine;
             //var genericPredictionMethod = mlContext.Model.GetType().GetMethod("CreatePredictionEngine", new[] { typeof(ITransformer), typeof(DataViewSchema) });
             //var predictionMethod = genericPredictionMethod.MakeGenericMethod(runtimeType, typeof(PricePrediction));
             //dynamicPredictionEngine = predictionMethod.Invoke(mlContext.Model, new object[] { model, dataViewSchema });
+
+            // Create runtime type from fields and types in a DataViewSchema
+            var runtimeType = ClassFactory.CreateType(dataViewSchema);
+
+            dynamic dynamicPredictionEngine;
+            var genericPredictionMethod = mlContext.Model.GetType().GetMethod("CreatePredictionEngine", new[] { typeof(ITransformer), typeof(DataViewSchema) });
+            var predictionMethod = genericPredictionMethod.MakeGenericMethod(runtimeType, typeof(PricePrediction));
+            dynamicPredictionEngine = predictionMethod.Invoke(mlContext.Model, new object[] { model, dataViewSchema });
+
+            var predictMethod = dynamicPredictionEngine.GetType().GetMethod("Predict", new[] { runtimeType });
+            var predict = predictMethod.Invoke(dynamicPredictionEngine, new[] { inputObject });
         }
     }
 }
